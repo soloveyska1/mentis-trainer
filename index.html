@@ -228,7 +228,6 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 .stat-mini .v{font-size:24px;font-weight:700}
 .stat-mini .k{font-size:11px;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
 .stat-mini .v.good{color:var(--good)}
-.stat-mini .v.accent{color:var(--accent)}
 
 .arena{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:30px 0}
 .problem{
@@ -274,33 +273,6 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 .numpad.force{display:grid}
 
 .game-foot{display:flex;justify-content:center;gap:12px;padding-bottom:6px}
-
-/* ===== Восхождение — геймификация цели ===== */
-.climb{position:absolute;right:20px;top:92px;bottom:78px;width:56px;display:flex;flex-direction:column;align-items:center;gap:9px;z-index:6;pointer-events:none}
-.climb-peak-lbl{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
-.climb-rail{position:relative;flex:1;width:8px;border-radius:var(--radius-pill);background:var(--s2);border:1px solid var(--line)}
-.climb-fill{position:absolute;left:-1px;right:-1px;bottom:0;height:0;border-radius:var(--radius-pill);background:var(--accent);box-shadow:0 0 12px -2px rgba(var(--glow-rgb),.6);transition:height .5s var(--ease)}
-.climb-camp{position:absolute;left:50%;width:13px;height:2px;transform:translate(-50%,50%);background:var(--line-strong);border-radius:2px;transition:background .3s,box-shadow .3s;z-index:2}
-.climb-camp.lit{background:var(--good);box-shadow:0 0 8px var(--good)}
-.climb-summit{position:absolute;left:50%;top:0;transform:translate(-50%,-100%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:11px solid var(--line-strong);transition:border-bottom-color .3s,filter .3s}
-.climb.summit-on .climb-summit{border-bottom-color:var(--warn);filter:drop-shadow(0 0 6px var(--warn))}
-.climb-marker{position:absolute;left:50%;bottom:0;width:20px;height:20px;border-radius:50%;background:var(--accent);border:3px solid var(--bg);box-shadow:var(--glow-accent-sm);transform:translate(-50%,50%);transition:bottom .5s var(--ease),background .3s;z-index:3}
-.climb-marker.rise{animation:climb-pop .42s var(--ease)}
-.climb-marker.slip{animation:climb-shake .42s var(--ease)}
-@keyframes climb-pop{0%{transform:translate(-50%,50%) scale(1)}45%{transform:translate(-50%,50%) scale(1.32)}100%{transform:translate(-50%,50%) scale(1)}}
-@keyframes climb-shake{0%,100%{transform:translate(-50%,50%)}30%{transform:translate(-74%,50%)}70%{transform:translate(-26%,50%)}}
-.climb-gain{position:absolute;left:150%;top:50%;transform:translateY(-50%);font-family:var(--font-mono);font-size:12px;font-weight:600;white-space:nowrap;opacity:0;color:var(--accent)}
-.climb-gain.up{animation:climb-gain-up 1s var(--ease)}
-.climb-gain.down{color:var(--bad);animation:climb-gain-down 1s var(--ease)}
-@keyframes climb-gain-up{0%{opacity:0;transform:translateY(-30%)}25%{opacity:1}100%{opacity:0;transform:translateY(-210%)}}
-@keyframes climb-gain-down{0%{opacity:0;transform:translateY(-70%)}25%{opacity:1}100%{opacity:0;transform:translateY(90%)}}
-.climb-toast{position:absolute;left:50%;top:78px;transform:translateX(-50%);z-index:8;pointer-events:none;font-weight:700;font-size:18px;color:var(--text);opacity:0;text-align:center;white-space:nowrap;display:flex;align-items:center;gap:8px}
-.climb-toast .climb-toast-ic{display:inline-flex;color:var(--warn)}
-.climb-toast .climb-toast-ic svg{width:20px;height:20px}
-.climb-toast.show{animation:climb-toast 1.7s var(--ease)}
-@keyframes climb-toast{0%{opacity:0;transform:translate(-50%,10px)}12%{opacity:1;transform:translate(-50%,0)}78%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-8px)}}
-.climb-h{display:none;height:6px;border-radius:var(--radius-pill);background:var(--s2);border:1px solid var(--line);margin:12px 0 0;overflow:hidden}
-.climb-h i{display:block;height:100%;width:0;background:var(--accent);border-radius:var(--radius-pill);transition:width .5s var(--ease)}
 
 /* ===== RESULTS ===== */
 .res-hero{text-align:center;padding:8px 0 4px}
@@ -433,8 +405,6 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 .lead b{color:var(--text)}
 
 @media (max-width:640px){
-  .climb{display:none}
-  .climb-h{display:block}
   .app{padding:0 16px 56px}
   .topbar{flex-wrap:wrap;gap:12px;padding:16px 2px 12px}
   .top-right{width:100%}
@@ -551,12 +521,10 @@ body.noanim *{animation:none !important;transition:none !important}
           <div class="timerbar" id="timerbar"><i style="width:100%"></i></div>
         </div>
         <div class="scorebox">
-          <div class="stat-mini climb-stat"><div class="v accent tnum" id="climb-alt-n">0</div><div class="k">высота · м</div></div>
           <div class="stat-mini"><div class="v good tnum" id="g-correct">0</div><div class="k">верно</div></div>
           <div class="stat-mini"><div class="v tnum" id="g-acc">—</div><div class="k">точность</div></div>
         </div>
       </div>
-      <div class="climb-h" id="climb-h" aria-hidden="true"><i id="climb-h-fill"></i></div>
 
       <div class="arena">
         <div class="problem tnum" id="problem"><span>0</span><span class="opsym">+</span><span>0</span></div>
@@ -577,18 +545,6 @@ body.noanim *{animation:none !important;transition:none !important}
         <button class="btn ghost sm" id="stop-btn">Завершить</button>
       </div>
     </div>
-    <div class="climb" id="climb" aria-hidden="true">
-      <div class="climb-peak-lbl" id="climb-peak">Пик 1</div>
-      <div class="climb-rail">
-        <div class="climb-summit"></div>
-        <div class="climb-camp" style="bottom:75%"></div>
-        <div class="climb-camp" style="bottom:50%"></div>
-        <div class="climb-camp" style="bottom:25%"></div>
-        <div class="climb-fill" id="climb-fill"></div>
-        <div class="climb-marker" id="climb-marker"><span class="climb-gain" id="climb-gain"></span></div>
-      </div>
-    </div>
-    <div class="climb-toast" id="climb-toast" aria-hidden="true"></div>
   </section>
 
   <!-- ============ RESULTS ============ -->
@@ -671,10 +627,6 @@ body.noanim *{animation:none !important;transition:none !important}
         <button class="toggle" id="t-calm"></button>
       </div>
       <div class="set-row">
-        <div class="info"><div class="t">Восхождение</div><div class="d">Геймификация цели: верный ответ ведёт вверх к вершине, неверный — отбрасывает назад</div></div>
-        <button class="toggle" id="t-climb"></button>
-      </div>
-      <div class="set-row">
         <div class="info"><div class="t">Экранная клавиатура</div><div class="d">Показывать цифровую панель и на компьютере</div></div>
         <button class="toggle" id="t-pad"></button>
       </div>
@@ -727,7 +679,6 @@ function defaultState(){
       sound:true, haptics:true, autoAdvance:true, noanim:false, forcePad:false,
       teachMode:"interactive",
       calmMode:false,
-      climbOn:true,
       accent:0,
       theme:"dark"
     },
@@ -924,7 +875,6 @@ function startGame(){
   ops.forEach(o=>game.perOp[o]={correct:0,attempts:0,rts:[]});
   $("#g-correct").textContent="0";
   $("#g-acc").textContent="—";
-  climbInit();
   $("#numpad").classList.toggle("force",S.settings.forcePad);
   go("game");
   nextProblem();
@@ -991,77 +941,6 @@ function registerAnswer(correct){
   updateRating(op,correct,rt);
   $("#g-correct").textContent=game.correct;
   $("#g-acc").textContent=Math.round(game.correct/game.attempts*100)+"%";
-  climbStep(correct,rt);
-}
-
-/* ===== Восхождение — логика геймификации ===== */
-var CLIMB_SEG=1000, CLIMB_CAMP=250;
-function climbEnabled(){ return S.settings.climbOn!==false; }
-function climbInit(){
-  game.climb={total:0,base:0,peak:1,safe:0,streak:0};
-  var on=climbEnabled();
-  var box=$("#climb"), h=$("#climb-h"), stat=document.querySelector(".climb-stat");
-  if(box){ box.style.display=on?"":"none"; box.classList.remove("summit-on"); }
-  if(stat) stat.style.display=on?"":"none";
-  if(h) h.style.display=on?"":"none";
-  $$(".climb-camp").forEach(function(c){ c.classList.remove("lit"); });
-  setClimbDom(0,0,1);
-}
-function setClimbDom(pct,total,peak){
-  var f=$("#climb-fill"), m=$("#climb-marker"), hf=$("#climb-h-fill"), an=$("#climb-alt-n"), pk=$("#climb-peak");
-  if(f) f.style.height=pct+"%";
-  if(m) m.style.bottom=pct+"%";
-  if(hf) hf.style.width=pct+"%";
-  if(an) an.textContent=total;
-  if(pk) pk.textContent="Пик "+peak;
-}
-function climbToast(text,icon){
-  var t=$("#climb-toast"); if(!t) return;
-  t.innerHTML=(icon?('<span class="climb-toast-ic">'+icon+'</span>'):'')+'<span>'+text+'</span>';
-  if(S.settings.noanim){ t.style.opacity="1"; setTimeout(function(){ t.style.opacity="0"; },1200); return; }
-  t.classList.remove("show"); void t.offsetWidth; t.classList.add("show");
-}
-function climbStep(correct,rt){
-  if(!climbEnabled()||!game.climb) return;
-  var c=game.climb, gainTxt;
-  if(correct){
-    var gain=80;
-    if(rt<2000) gain+=40; else if(rt<4000) gain+=20;
-    c.streak++; gain+=Math.min((c.streak-1)*5,30);
-    c.total+=gain; gainTxt="+"+gain;
-    var summited=false;
-    while(c.total>=c.base+CLIMB_SEG){ c.base+=CLIMB_SEG; c.peak++; c.safe=c.base; summited=true; }
-    var within=c.total-c.base;
-    var campAlt=c.base+Math.floor(within/CLIMB_CAMP)*CLIMB_CAMP;
-    if(campAlt>c.safe){ c.safe=campAlt; if(!summited) onCamp(); }
-    if(summited) onSummit(c.peak-1);
-  } else {
-    c.streak=0; c.total=Math.max(c.safe,c.total-70); gainTxt="−70";
-  }
-  renderClimb(correct,gainTxt);
-}
-function renderClimb(correct,gainTxt){
-  var c=game.climb; if(!c) return;
-  var within=c.total-c.base, pct=Math.max(0,Math.min(100,within/CLIMB_SEG*100));
-  setClimbDom(pct,c.total,c.peak);
-  var th=[750,500,250];
-  $$(".climb-camp").forEach(function(el,i){ el.classList.toggle("lit", within>=th[i]); });
-  var m=$("#climb-marker");
-  if(m){
-    if(!S.settings.noanim){ m.classList.remove("rise","slip"); void m.offsetWidth; m.classList.add(correct?"rise":"slip"); }
-    m.style.background=correct?"var(--accent)":"var(--bad)";
-    setTimeout(function(){ if(m) m.style.background="var(--accent)"; },380);
-  }
-  var g=$("#climb-gain");
-  if(g && !S.settings.noanim){ g.textContent=gainTxt; g.classList.remove("up","down"); void g.offsetWidth; g.classList.add(correct?"up":"down"); }
-}
-function onCamp(){ climbToast("Лагерь взят", (window.MICONS?MICONS.flame:"")); }
-function onSummit(n){
-  var box=$("#climb"); if(box) box.classList.add("summit-on");
-  climbToast("Вершина "+n+" взята!", (window.MICONS?MICONS.trophy:""));
-  try{ sndOk(); }catch(e){}
-  try{ vibe([40,40,90]); }catch(e){}
-  setTimeout(function(){ if(box) box.classList.remove("summit-on"); },1500);
 }
 
 function flashCorrect(){
@@ -1345,7 +1224,7 @@ function hexRgb(hex){const n=parseInt(hex.slice(1),16);return `${(n>>16)&255},${
 function hexMix(hex,t){const n=parseInt(hex.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255,m=v=>Math.round(v+(255-v)*t);return `#${(1<<24|m(r)<<16|m(g)<<8|m(b)).toString(16).slice(1)}`;}
 function applyAnim(){document.body.classList.toggle("noanim",S.settings.noanim);}
 function syncSettings(){
-  const T={"t-sound":["sound","Звук"],"t-haptics":["haptics","Вибрация"],"t-auto":["autoAdvance","Авто-переход"],"t-anim":["noanim","Без анимаций"],"t-pad":["forcePad","Экранная клавиатура"],"t-calm":["calmMode","Спокойный счёт"],"t-climb":["climbOn","Восхождение"]};
+  const T={"t-sound":["sound","Звук"],"t-haptics":["haptics","Вибрация"],"t-auto":["autoAdvance","Авто-переход"],"t-anim":["noanim","Без анимаций"],"t-pad":["forcePad","Экранная клавиатура"],"t-calm":["calmMode","Спокойный счёт"]};
   Object.keys(T).forEach(id=>{const el=$("#"+id);if(!el)return;const on=!!S.settings[T[id][0]];el.classList.toggle("on",on);el.setAttribute("role","switch");el.setAttribute("aria-checked",on?"true":"false");el.setAttribute("aria-label",T[id][1]);});
   const seg=$("#teach-seg");if(seg){seg.setAttribute("role","radiogroup");seg.setAttribute("aria-label","При ошибке");}
   $$("#teach-seg button").forEach(b=>{const on=b.dataset.tm===(S.settings.teachMode||"interactive");b.classList.toggle("on",on);b.setAttribute("role","radio");b.setAttribute("aria-checked",on?"true":"false");});
@@ -1361,7 +1240,6 @@ $("#t-anim").addEventListener("click",()=>{S.settings.noanim=!S.settings.noanim;
 $("#t-pad").addEventListener("click",()=>{S.settings.forcePad=!S.settings.forcePad;save();syncSettings();});
 $("#teach-seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.settings.teachMode=b.dataset.tm;save();syncSettings();});
 $("#t-calm").addEventListener("click",()=>{S.settings.calmMode=!S.settings.calmMode;save();syncSettings();});
-$("#t-climb").addEventListener("click",()=>{S.settings.climbOn=(S.settings.climbOn===false);save();syncSettings();});
 $("#swatches").addEventListener("click",e=>{const b=e.target.closest(".swatch");if(!b)return;S.settings.accent=+b.dataset.i;save();applyAccent();syncSettings();});
 
 $("#export-btn").addEventListener("click",()=>{
