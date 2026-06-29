@@ -93,7 +93,7 @@ html,body{height:100%}
 body{
   font-family:var(--font);
   color:var(--text);
-  background:var(--page-glow), var(--bg);
+  background:var(--bg);
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
   line-height:1.45;
@@ -176,7 +176,7 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
   background:var(--s2);border:1px solid var(--line);font-weight:500;font-size:15px;color:var(--muted);
   transition:all var(--dur) var(--ease);
 }
-.chip .op{font-family:var(--font-mono);font-size:17px;width:18px;text-align:center;color:var(--faint);transition:color var(--dur)}
+.chip .op{font-size:18px;width:18px;text-align:center;color:var(--faint);transition:color var(--dur)}
 .chip.on{color:var(--text);border-color:var(--accent);background:var(--accent-faint)}
 .chip.on .op{color:var(--accent)}
 .chip:hover{border-color:var(--line-strong)}
@@ -356,7 +356,7 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 .tile-sub{font-size:13px;color:var(--muted);line-height:1.4;flex:1}
 .tile-foot{margin-top:6px}
 .tile-best{font-family:var(--font-mono);font-size:12px;font-weight:500;color:var(--accent);letter-spacing:.02em}
-.tile-best.faint{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:500}
+.tile-best.faint{font-family:var(--font-sans);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:600}
 .err-banner{display:block;width:100%;text-align:left;margin:18px 0 4px;padding:15px 18px;border-radius:var(--radius-sm);background:var(--bad-soft);border:1px solid color-mix(in srgb,var(--bad) 40%,transparent);color:var(--text);font-weight:600;font-size:15px;transition:transform var(--dur-fast),background var(--dur)}
 .err-banner b{color:var(--bad)}
 .err-banner:hover{transform:translateY(-2px)}
@@ -400,7 +400,7 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 .ex-stat .v{font-size:30px;font-weight:700}
 .ex-stat .k{font-size:11px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
 /* mono eyebrow — the kit's micro-label voice, applied app-wide */
-.mentis-eyebrow,h2.section,.row .label,.rng small,.stat-mini .k,.metric .k,.bigstat .k,.opcard .nums .c .l,.ex-stat .k{font-family:var(--font-mono);font-weight:500;letter-spacing:.14em}
+.mentis-eyebrow,h2.section,.row .label,.rng small,.stat-mini .k,.metric .k,.bigstat .k,.opcard .nums .c .l,.ex-stat .k{font-family:var(--font-sans);font-weight:600;letter-spacing:.1em}
 .lead{max-width:600px;margin:0 auto;color:var(--muted);line-height:1.6}
 .lead b{color:var(--text)}
 
@@ -448,7 +448,6 @@ body.noanim *{animation:none !important;transition:none !important}
   <section class="view active" id="view-home">
     <div class="hero">
       <h1>Тренируй устный счёт</h1>
-      <p>Адаптивная сложность держит тебя в зоне ~85 % успеха — там, где мозг учится быстрее всего. Прогресс хранится локально.</p>
     </div>
 
     <div id="home-session"></div>
