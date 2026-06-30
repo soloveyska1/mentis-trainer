@@ -4500,19 +4500,29 @@ go("home");
 </script>
 <!-- module: duelrace — local 2-player mirror race, one keyboard, zero-collision input -->
 <style id="mentis-duel-css">
-.duel-legend-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:220px;margin:8px auto 0}
-.duel-legend-grid i{font-style:normal;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
-  background:var(--s2);border:1px solid var(--line);border-radius:8px;padding:7px 0;font-family:var(--font-mono);font-weight:700;font-size:14px;color:var(--text)}
-.duel-legend-grid i small{font-size:10px;font-weight:600;color:var(--faint)}
-.duel-legend-grid i.duel-lg-wide{grid-column:1/-1}
-.duel-legend-grid.duel-lg-row{grid-template-columns:repeat(10,1fr);max-width:440px}
-.duel-legend-grid.duel-lg-row i{padding:8px 0;font-size:13px}
-.duel-legend-note{text-align:center;color:var(--faint);font-size:12px;margin-top:5px}
-.duel-legend-prev{margin-top:4px}
-.duel-zone-row .field{display:flex;flex-direction:column;gap:2px}
-.duel-kbd-preview{width:100%;max-width:460px;margin:6px auto 0;text-align:center}
-.duel-kbd-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--accent);background:var(--accent-faint);border-radius:999px;padding:3px 10px;margin-bottom:4px}
+/* on-screen keypad mirror — digit big, physical key small; matches each hand's
+   3x3 cluster so no memorisation and no head-down hunting */
+.duel-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%;max-width:188px;margin:2px auto 0}
+.duel-key{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  background:var(--s3);border:1px solid var(--line);border-radius:9px;padding:8px 0;cursor:pointer;
+  font-family:var(--font-mono);transition:background .12s,border-color .12s,transform .07s;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+.duel-key b{font-size:16px;font-weight:800;color:var(--text);line-height:1}
+.duel-key small{font-size:10px;font-weight:600;color:var(--faint)}
+.duel-key.duel-key0{grid-column:1/-1}
+.duel-key.duel-clear{grid-column:1/-1;background:transparent;border-style:dashed;padding:6px 0}
+.duel-key.duel-clear b{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.02em}
+.duel-key:active{transform:scale(.93)}
+.duel-half.p1 .duel-key.lit,.duel-pad-col.p1 .duel-key.lit{background:var(--accent-soft);border-color:var(--accent)}
+.duel-half.p2 .duel-key.lit,.duel-pad-col.p2 .duel-key.lit{background:rgba(91,115,255,.20);border-color:var(--accent-2)}
+.duel-pads-preview{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.duel-pad-col{display:flex;flex-direction:column;align-items:center;gap:7px}
+.duel-pad-col .duel-tag{font-size:12px;font-weight:800;letter-spacing:.04em;border-radius:999px;padding:4px 11px}
+.duel-pad-col.p1 .duel-tag{color:var(--accent);background:var(--accent-faint)}
+.duel-pad-col.p2 .duel-tag{color:var(--accent-2);background:rgba(91,115,255,.12)}
+.duel-half.p1 .duel-tag{color:var(--accent);background:var(--accent-faint)}
+.duel-half.p2 .duel-tag{color:var(--accent-2);background:rgba(91,115,255,.12)}
+.duel-rule{max-width:460px;margin:10px auto 0;text-align:center;color:var(--muted);font-size:13px;line-height:1.5}
+.duel-hand{font-size:11px;color:var(--faint);font-weight:600;min-height:1em}
 
 .duel-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;padding:6px 0}
 .duel-score-row{display:flex;align-items:center;justify-content:center;gap:18px;width:100%;max-width:520px}
@@ -4539,8 +4549,8 @@ go("home");
 .duel-half.duel-win{border-color:var(--good);box-shadow:0 0 0 1px var(--good) inset,0 10px 26px var(--good-soft)}
 .duel-half.duel-locked{opacity:.45}
 .duel-half-note{font-size:11px;color:var(--faint);min-height:1.2em}
-.duel-buf{font-family:var(--font-mono);font-size:22px;letter-spacing:.12em;min-height:1.4em;color:var(--text)}
-.duel-shake{animation:shake .34s var(--ease)}
+.duel-buf{font-family:var(--font-mono);font-size:30px;font-weight:700;letter-spacing:.06em;min-height:1.3em;color:var(--text);transition:color .12s}
+.duel-buf.over{color:var(--bad)}
 
 .duel-quit{display:block;margin:4px auto 0}
 
@@ -4551,8 +4561,10 @@ go("home");
 @media (max-width:460px){
   .duel-halves{gap:8px}
   .duel-half{padding:14px 6px}
-  .duel-buf{font-size:18px}
-  .duel-legend-grid.duel-lg-row{max-width:100%}
+  .duel-buf{font-size:24px}
+  .duel-pad{max-width:150px;gap:5px}
+  .duel-key b{font-size:14px}
+  .duel-pads-preview{gap:14px}
 }
 </style>
 <script>
@@ -4579,45 +4591,42 @@ go("home");
     return { op:op, a:a, b:b, sym:sym, ans:ans };
   }
 
-  // ---- zero-collision key routing — the actual mechanism that lets two
-  // players type concurrently on one physical keyboard. KeyboardEvent.code
-  // distinguishes the physical key (Digit7 vs Numpad7) even when both would
-  // type the same digit, so the two zones below NEVER share a physical key. ----
-  var P1_DIGIT = {Digit0:0,Digit1:1,Digit2:2,Digit3:3,Digit4:4,Digit5:5,Digit6:6,Digit7:7,Digit8:8,Digit9:9};
-  var P2_NUMPAD_DIGIT = {Numpad0:0,Numpad1:1,Numpad2:2,Numpad3:3,Numpad4:4,Numpad5:5,Numpad6:6,Numpad7:7,Numpad8:8,Numpad9:9};
-  // universal fallback for keyboards with no numpad block — right-hand cluster,
-  // spatially mirroring where a numpad sits, same mnemonic used by laptop
-  // numpad-emulation layouts (U I O / J K L / M , . = 7 8 9 / 4 5 6 / 1 2 3).
-  var P2_LETTER_DIGIT = {KeyU:7,KeyI:8,KeyO:9,KeyJ:4,KeyK:5,KeyL:6,KeyM:1,Comma:2,Period:3,KeyN:0};
-  function routeKey(code, p2Zone){
+  // ---- zero-collision, hand-separated key routing. KeyboardEvent.code reads the
+  // PHYSICAL key, so each player gets a compact 3x3 cluster under one hand at
+  // opposite far ends of the deck — forearms never cross. Symmetric for both:
+  // three rows = a numpad (7-8-9 top), the key just past the cluster = 0, the
+  // outer Shift = clear. No submit key — auto-check fires the instant it's right. ----
+  var P1_DIGIT = {KeyQ:7,KeyW:8,KeyE:9, KeyA:4,KeyS:5,KeyD:6, KeyZ:1,KeyX:2,KeyC:3, KeyV:0};
+  var P2_DIGIT = {KeyU:7,KeyI:8,KeyO:9, KeyJ:4,KeyK:5,KeyL:6, KeyM:1,Comma:2,Period:3, Slash:0};
+  // a real numpad, if present, also drives player 2 transparently (no toggle, no
+  // detection) — same 7-8-9-top mapping, so a desktop keyboard is a free upgrade.
+  var P2_NUMPAD = {Numpad0:0,Numpad1:1,Numpad2:2,Numpad3:3,Numpad4:4,Numpad5:5,Numpad6:6,Numpad7:7,Numpad8:8,Numpad9:9};
+  function routeKey(code){
     if(P1_DIGIT.hasOwnProperty(code)) return { player:1, digit:P1_DIGIT[code] };
-    if(code==="Backspace") return { player:1, action:"clear" };
-    if(code==="Enter") return { player:1, action:"submit" };
-    if(p2Zone==="numpad"){
-      if(P2_NUMPAD_DIGIT.hasOwnProperty(code)) return { player:2, digit:P2_NUMPAD_DIGIT[code] };
-      if(code==="NumpadEnter") return { player:2, action:"submit" };
-      if(code==="NumpadDecimal"||code==="NumpadSubtract") return { player:2, action:"clear" };
-    } else {
-      if(P2_LETTER_DIGIT.hasOwnProperty(code)) return { player:2, digit:P2_LETTER_DIGIT[code] };
-      if(code==="Slash") return { player:2, action:"submit" };
-      if(code==="Semicolon") return { player:2, action:"clear" };
-    }
+    if(code==="ShiftLeft") return { player:1, action:"clear" };
+    if(P2_DIGIT.hasOwnProperty(code)) return { player:2, digit:P2_DIGIT[code] };
+    if(P2_NUMPAD.hasOwnProperty(code)) return { player:2, digit:P2_NUMPAD[code] };
+    if(code==="ShiftRight"||code==="NumpadDecimal") return { player:2, action:"clear" };
     return null;
   }
 
-  function legendGridHTML(zone){
-    if(zone==="numpad"){
-      return '<div class="duel-legend-grid duel-lg-numpad">'+
-        '<i>7</i><i>8</i><i>9</i><i>4</i><i>5</i><i>6</i><i>1</i><i>2</i><i>3</i>'+
-        '<i class="duel-lg-wide">0</i></div>'+
-        '<div class="duel-legend-note">Numpad · Enter — ответ · «,» — стереть</div>';
-    }
-    return '<div class="duel-legend-grid">'+
-      '<i>U<small>7</small></i><i>I<small>8</small></i><i>O<small>9</small></i>'+
-      '<i>J<small>4</small></i><i>K<small>5</small></i><i>L<small>6</small></i>'+
-      '<i>M<small>1</small></i><i>,<small>2</small></i><i>.<small>3</small></i>'+
-      '<i class="duel-lg-wide">N<small>0</small></i></div>'+
-      '<div class="duel-legend-note">«/» — ответ · «;» — стереть</div>';
+  // physical-key label per digit, for the on-screen keypad mirror
+  var P1KEYS = {7:"Q",8:"W",9:"E",4:"A",5:"S",6:"D",1:"Z",2:"X",3:"C",0:"V"};
+  var P2KEYS = {7:"U",8:"I",9:"O",4:"J",5:"K",6:"L",1:"M",2:",",3:".",0:"/"};
+  function keypadHTML(player){
+    var K = player===1 ? P1KEYS : P2KEYS;
+    var order = [7,8,9,4,5,6,1,2,3], h = '<div class="duel-pad">';
+    order.forEach(function(d){ h += '<button type="button" class="duel-key" data-p="'+player+'" data-d="'+d+'"><b>'+d+'</b><small>'+K[d]+'</small></button>'; });
+    h += '<button type="button" class="duel-key duel-key0" data-p="'+player+'" data-d="0"><b>0</b><small>'+K[0]+'</small></button>';
+    h += '<button type="button" class="duel-key duel-clear" data-p="'+player+'" data-act="clear"><b>⇧ '+(player===1?"слева":"справа")+' — стереть</b></button>';
+    h += '</div>';
+    return h;
+  }
+  function flashCell(player, digit){
+    var half = document.getElementById("duel-half-"+player); if(!half) return;
+    var cell = half.querySelector('.duel-key[data-d="'+digit+'"]'); if(!cell) return;
+    cell.classList.add("lit");
+    setTimeout(function(){ cell.classList.remove("lit"); }, 140);
   }
 
   // ---- module state ----
@@ -4635,7 +4644,7 @@ go("home");
   // ---------- SETUP ----------
   function loadCfg(){
     var S = M.getState();
-    if(!S.settings.duel) S.settings.duel = { ops:{add:true,sub:true,mul:false,div:false}, diff:"medium", target:7, p2Zone:"letters" };
+    if(!S.settings.duel) S.settings.duel = { ops:{add:true,sub:true,mul:false,div:false}, diff:"medium", target:7 };
     return S.settings.duel;
   }
   function saveCfg(){ try{ M.save(); }catch(e){} }
@@ -4656,17 +4665,11 @@ go("home");
         '<div class="row"><div class="label">До скольки побед</div><div class="field"><div class="seg sm" id="duel-target">'+
           [5,7,10].map(function(n){ return '<button data-n="'+n+'" type="button"'+(cfg.target===n?' class="on"':'')+'>'+n+'</button>'; }).join('')+
         '</div></div></div>'+
-        '<div class="row duel-zone-row"><div class="label">Зона игрока 2</div><div class="field">'+
-          '<div class="seg sm" id="duel-zone">'+
-            '<button data-z="letters" type="button"'+(cfg.p2Zone==="letters"?' class="on"':'')+'>Буквы (есть всегда)</button>'+
-            '<button data-z="numpad" type="button"'+(cfg.p2Zone==="numpad"?' class="on"':'')+'>Нампад</button>'+
-          '</div>'+
-          '<div id="duel-legend-prev" class="duel-legend-prev">'+legendGridHTML(cfg.p2Zone)+'</div>'+
-        '</div></div>'+
-        '<div class="duel-kbd-preview"><span class="duel-kbd-tag">Игрок 1</span>'+
-          '<div class="duel-legend-grid duel-lg-row">'+[1,2,3,4,5,6,7,8,9,0].map(function(n){ return '<i>'+n+'</i>'; }).join('')+'</div>'+
-          '<div class="duel-legend-note">верхний ряд цифр · Enter — ответ · ⌫ — стереть</div>'+
+        '<div class="duel-pads-preview">'+
+          '<div class="duel-pad-col p1"><span class="duel-tag">Игрок 1 · левая рука</span>'+keypadHTML(1)+'</div>'+
+          '<div class="duel-pad-col p2"><span class="duel-tag">Игрок 2 · правая рука</span>'+keypadHTML(2)+'</div>'+
         '</div>'+
+        '<div class="duel-rule">Руки — по краям клавиатуры, не мешают друг другу. Три ряда под рукой — это нампад (7-8-9 сверху), клавиша сразу за ними — 0, ваш Shift — стереть. <b>Ответ засчитывается сам</b>, как только наберёшь верно — Enter не нужен. Если есть нампад справа — игрок 2 может играть на нём.</div>'+
         '<button class="btn lg" id="duel-go" type="button">Начать дуэль <span aria-hidden="true">⚔</span></button>'+
       '</div>';
     body.querySelector("#duel-ops").addEventListener("click", function(e){
@@ -4685,12 +4688,6 @@ go("home");
       cfg.target = +b.dataset.n; saveCfg();
       [].forEach.call(e.currentTarget.children, function(x){ x.classList.toggle("on", x===b); });
     });
-    body.querySelector("#duel-zone").addEventListener("click", function(e){
-      var b = e.target.closest("button"); if(!b) return;
-      cfg.p2Zone = b.dataset.z; saveCfg();
-      [].forEach.call(e.currentTarget.children, function(x){ x.classList.toggle("on", x===b); });
-      body.querySelector("#duel-legend-prev").innerHTML = legendGridHTML(cfg.p2Zone);
-    });
     body.querySelector("#duel-go").addEventListener("click", function(){ beginMatch(body); });
   }
 
@@ -4698,9 +4695,9 @@ go("home");
   function beginMatch(body){
     var ops = Object.keys(cfg.ops).filter(function(k){ return cfg.ops[k]; });
     duel = {
-      ops: ops, diff: cfg.diff, target: cfg.target, p2Zone: cfg.p2Zone,
+      ops: ops, diff: cfg.diff, target: cfg.target,
       p1Score:0, p2Score:0, round:0, p1Best:null, p2Best:null,
-      p1Buf:[], p2Buf:[], p1Misses:0, p2Misses:0, p1Locked:false, p2Locked:false,
+      p1Buf:[], p2Buf:[],
       roundOver:false, active:true, cur:null, roundStart:0
     };
     raceScreen(body);
@@ -4708,32 +4705,44 @@ go("home");
     nextRound();
   }
 
-  function raceScreen(body){ body.innerHTML = '<div class="duel-wrap" id="duel-arena"></div>'; }
+  function raceScreen(body){
+    body.innerHTML = '<div class="duel-wrap" id="duel-arena"></div>';
+    // delegated once per match — survives per-round innerHTML swaps
+    document.getElementById("duel-arena").addEventListener("pointerdown", onPadPointer);
+  }
 
   function attachKeys(){
     detachKeys();
     keyHandler = function(e){
       if(!duel || !duel.active || duel.roundOver) return;
-      var r = routeKey(e.code, duel.p2Zone);
+      var r = routeKey(e.code);
       if(!r) return;
       e.preventDefault();
       handleInput(r);
     };
     document.addEventListener("keydown", keyHandler);
   }
+  // tap/click the on-screen keypad — touch devices get a second comfortable input
+  // path (multi-touch via pointer events); on a laptop it's just the visual guide.
+  function onPadPointer(e){
+    var k = e.target.closest(".duel-key"); if(!k) return;
+    e.preventDefault();
+    var p = +k.getAttribute("data-p");
+    if(k.getAttribute("data-act")==="clear") handleInput({ player:p, action:"clear" });
+    else handleInput({ player:p, digit:+k.getAttribute("data-d") });
+  }
 
   function handleInput(r){
-    var locked = r.player===1 ? duel.p1Locked : duel.p2Locked;
-    if(locked) return;
+    if(!duel || !duel.active || duel.roundOver) return;
     if(r.digit!=null){
       var buf = r.player===1 ? duel.p1Buf : duel.p2Buf;
-      if(buf.length<6) buf.push(r.digit);
+      if(buf.length<7) buf.push(r.digit);
+      flashCell(r.player, r.digit);
       renderBuf(r.player);
+      checkWin(r.player);
     } else if(r.action==="clear"){
       (r.player===1?duel.p1Buf:duel.p2Buf).length = 0;
       renderBuf(r.player);
-    } else if(r.action==="submit"){
-      trySubmit(r.player);
     }
   }
 
@@ -4741,15 +4750,19 @@ go("home");
     var el = document.getElementById("duel-buf-"+player);
     if(!el) return;
     var buf = player===1?duel.p1Buf:duel.p2Buf;
-    el.textContent = buf.length ? new Array(Math.min(buf.length,6)+1).join("●  ").trim() : "";
+    el.textContent = buf.join("");
+    var over = duel.cur && buf.length > String(duel.cur.ans).length;
+    el.classList.toggle("over", !!over);
   }
 
-  function trySubmit(player){
+  // auto-check: the instant a player's number equals the answer, they take the
+  // round — no submit key, symmetric for both, fastest possible commit. Fires
+  // only on exact equality, never on a prefix, so it can't trigger early.
+  function checkWin(player){
     if(duel.roundOver) return;
     var buf = player===1?duel.p1Buf:duel.p2Buf;
     if(!buf.length) return;
-    var val = +buf.join("");
-    if(val === duel.cur.ans){
+    if(+buf.join("") === duel.cur.ans){
       duel.roundOver = true;
       if(player===1) duel.p1Score++; else duel.p2Score++;
       var rt = Date.now()-duel.roundStart;
@@ -4757,31 +4770,9 @@ go("home");
       else { if(duel.p2Best==null||rt<duel.p2Best) duel.p2Best=rt; }
       try{ M.audio.ok(); M.audio.vibe(35); }catch(e){}
       revealRound(player);
-    } else {
-      buf.length = 0; renderBuf(player);
-      if(player===1) duel.p1Misses++; else duel.p2Misses++;
-      try{ M.audio.no(); }catch(e){}
-      flashWrong(player);
-      var misses = player===1?duel.p1Misses:duel.p2Misses;
-      if(misses>=3){
-        if(player===1) duel.p1Locked=true; else duel.p2Locked=true;
-        markLocked(player);
-        if(duel.p1Locked && duel.p2Locked){ duel.roundOver = true; revealRound(0); }
-      }
     }
   }
 
-  function markLocked(player){
-    var el = document.getElementById("duel-half-"+player);
-    if(el) el.classList.add("duel-locked");
-    var note = document.getElementById("duel-note-"+player);
-    if(note) note.textContent = "три промаха — ждём раунд";
-  }
-  function flashWrong(player){
-    var el = document.getElementById("duel-half-"+player);
-    if(!el) return;
-    el.classList.remove("duel-shake"); void el.offsetWidth; el.classList.add("duel-shake");
-  }
   function scoreDotsHTML(score, target, cls){
     var h = "";
     for(var i=0;i<target;i++) h += '<i class="duel-dot'+(i<score?(" on "+cls):"")+'"></i>';
@@ -4797,8 +4788,8 @@ go("home");
 
   function nextRound(){
     if(duel.p1Score>=duel.target || duel.p2Score>=duel.target){ finishMatch(); return; }
-    duel.round++; duel.roundOver=false; duel.p1Locked=false; duel.p2Locked=false;
-    duel.p1Buf=[]; duel.p2Buf=[]; duel.p1Misses=0; duel.p2Misses=0;
+    duel.round++; duel.roundOver=false;
+    duel.p1Buf=[]; duel.p2Buf=[];
     var op = duel.ops[Math.floor(Math.random()*duel.ops.length)];
     duel.cur = duelProblem(op, duel.diff);
     duel.roundStart = Date.now();
@@ -4821,14 +4812,16 @@ go("home");
       '<div class="duel-reveal" id="duel-reveal" hidden></div>'+
       '<div class="duel-halves">'+
         '<div class="duel-half p1" id="duel-half-1">'+
+          '<span class="duel-tag">П1</span>'+
           '<div class="duel-buf tnum" id="duel-buf-1"></div>'+
-          '<div class="duel-legend-grid duel-lg-row">'+[1,2,3,4,5,6,7,8,9,0].map(function(n){ return '<i>'+n+'</i>'; }).join('')+'</div>'+
-          '<div class="duel-half-note" id="duel-note-1"></div>'+
+          keypadHTML(1)+
+          '<div class="duel-hand">левая рука</div>'+
         '</div>'+
         '<div class="duel-half p2" id="duel-half-2">'+
+          '<span class="duel-tag">П2</span>'+
           '<div class="duel-buf tnum" id="duel-buf-2"></div>'+
-          legendGridHTML(duel.p2Zone)+
-          '<div class="duel-half-note" id="duel-note-2"></div>'+
+          keypadHTML(2)+
+          '<div class="duel-hand">правая рука</div>'+
         '</div>'+
       '</div>'+
       '<button class="btn ghost sm duel-quit" id="duel-quit" type="button">Завершить дуэль</button>';
