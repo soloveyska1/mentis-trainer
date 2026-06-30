@@ -88,8 +88,9 @@
   --shadow-elevated:var(--shadow-card);
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{
   font-family:var(--font);
   color:var(--text);
@@ -98,6 +99,7 @@ body{
   text-rendering:optimizeLegibility;
   line-height:1.45;
   overflow-x:hidden;
+  overscroll-behavior-y:none;
 }
 .tnum,.mentis-num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;letter-spacing:-.01em;font-style:normal}
 button{font-family:inherit;cursor:pointer;color:inherit;border:none;background:none}
@@ -105,11 +107,13 @@ input{font-family:inherit}
 ::selection{background:var(--accent-soft)}
 
 /* layout */
-.app{max-width:980px;margin:0 auto;padding:0 20px 64px;min-height:100%}
+.app{max-width:980px;margin:0 auto;
+  padding:0 max(20px,env(safe-area-inset-right)) calc(64px + env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));
+  min-height:100%}
 .topbar{
   display:flex;align-items:center;justify-content:space-between;gap:16px;
-  padding:22px 4px 18px;position:sticky;top:0;z-index:40;
-  background:linear-gradient(180deg,var(--bg) 62%,transparent);
+  padding:calc(22px + env(safe-area-inset-top)) 4px 18px;position:sticky;top:0;z-index:40;
+  background:linear-gradient(180deg,var(--bg) 72%,transparent);
 }
 .brand{display:flex;align-items:center;gap:11px;user-select:none}
 .brand .logo{
@@ -191,7 +195,7 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 .rng{display:flex;flex-direction:column;gap:6px}
 .rng small{color:var(--faint);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
 .rng .pair{display:flex;align-items:center;gap:6px}
-.rng input{width:70px;background:var(--s2);border:1px solid var(--line);border-radius:9px;padding:9px;color:var(--text);font-size:15px;text-align:center}
+.rng input{width:70px;background:var(--s2);border:1px solid var(--line);border-radius:9px;padding:10px 9px;color:var(--text);font-size:16px;text-align:center}
 .rng input:focus{outline:none;border-color:var(--accent)}
 
 .btn{
@@ -214,7 +218,7 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 
 /* ===== GAME ===== */
 #view-game{position:relative}
-.game-wrap{min-height:72vh;display:flex;flex-direction:column}
+.game-wrap{min-height:72vh;min-height:72dvh;display:flex;flex-direction:column}
 .game-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:4px}
 .timerbox{flex:1}
 .timer-num{font-size:24px;font-weight:700;letter-spacing:.01em}
@@ -447,7 +451,7 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 .mod-body{padding-top:2px}
 
 /* набор для упражнений — переиспользуется модулями */
-.ex-wrap{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;padding:18px 0}
+.ex-wrap{min-height:60vh;min-height:60dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;padding:18px 0}
 .ex-pills{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .ex-pill{background:var(--s2);border:1px solid var(--line);border-radius:99px;padding:8px 16px;font-size:13px;font-weight:700;color:var(--muted)}
 .ex-pill b{color:var(--text)}
@@ -479,8 +483,8 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 .lead b{color:var(--text)}
 
 @media (max-width:640px){
-  .app{padding:0 16px 56px}
-  .topbar{flex-wrap:wrap;gap:12px;padding:16px 2px 12px}
+  .app{padding:0 max(16px,env(safe-area-inset-right)) calc(56px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+  .topbar{flex-wrap:wrap;gap:12px;padding:calc(16px + env(safe-area-inset-top)) 2px 12px}
   .top-right{width:100%}
   .nav{flex:1}
   .nav button{flex:1;padding:11px 8px;font-size:13px;text-align:center}
@@ -494,6 +498,15 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
   .row .label{min-width:100%;}
   .mod-tiles{grid-template-columns:1fr}
   .mod-spacer{display:none}
+}
+/* phones (incl. iPhone 17 Pro 393 / Pro Max 440): stack settings rows whose
+   control is a multi-button segment, so long descriptions get full width */
+@media (max-width:520px){
+  .set-row:has(.seg){flex-direction:column;align-items:stretch;gap:12px}
+  .set-row:has(.seg) .info{width:100%}
+  .set-row:has(.seg) .info .d{max-width:none}
+  .set-row:has(.seg) .seg{align-self:flex-start;max-width:100%;flex-wrap:wrap}
+  .btn.sm{padding:11px 16px}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation:none !important;transition:none !important}
@@ -1863,6 +1876,15 @@ $("#theme-btn").addEventListener("click",()=>{S.settings.theme=S.settings.theme=
 function bootUI(){applyAccent();applyTheme();applyAnim();syncHome();syncSettings();renderBest();renderHomeModules();renderGoal();}
 bootUI();
 go("home");
+/* touch devices: drive the main-game answer via the on-screen numpad and suppress
+   the native keyboard, so iOS doesn't pop a second keypad over the in-app one. */
+try{
+  if(window.matchMedia && matchMedia("(pointer:coarse)").matches){
+    var _ans=document.getElementById("answer");
+    if(_ans){ _ans.setAttribute("inputmode","none"); _ans.setAttribute("readonly","readonly"); }
+    document.documentElement.classList.add("is-touch");
+  }
+}catch(e){}
 </script>
 
 <!-- ============================================================
@@ -6210,15 +6232,15 @@ go("home");
 #teach-ov:not(.teach-noanim).teach-show{animation:teach-fade .18s ease both;}
 @keyframes teach-fade{from{opacity:0}to{opacity:1}}
 
-.teach-x{position:fixed;top:14px;right:16px;z-index:2;
-  width:40px;height:40px;border-radius:var(--radius-sm,10px);
-  border:1px solid var(--line);background:transparent;color:var(--muted);
+.teach-x{position:fixed;top:calc(14px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));z-index:2;
+  width:44px;height:44px;border-radius:var(--radius-sm,10px);
+  border:1px solid var(--line);background:var(--s2);color:var(--muted);
   font-size:18px;line-height:1;cursor:pointer;
   transition:color .15s,border-color .15s,background .15s;}
 .teach-x:hover{color:var(--text);border-color:var(--text);background:var(--s2);}
 
-#teach-shell{min-height:100%;display:flex;align-items:flex-start;justify-content:center;
-  padding:56px 18px 80px;box-sizing:border-box;}
+#teach-shell{min-height:100%;min-height:100dvh;display:flex;align-items:flex-start;justify-content:center;
+  padding:calc(56px + env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) calc(80px + env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));box-sizing:border-box;}
 #teach-card{width:min(680px,100%);}
 
 /* ---- header ---- */
