@@ -272,6 +272,33 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 @media (hover:hover) and (pointer:fine){.numpad{display:none}}
 .numpad.force{display:grid}
 
+/* estimate-first hint — the elite ballpark/sanity-check habit */
+.est-hint{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--accent);text-align:center;margin:-12px 0 -2px;min-height:1.2em}
+.est-hint[hidden]{display:none}
+.est-b{font-weight:600;font-size:13px;border-radius:var(--radius-pill);padding:2px 9px;margin-left:2px}
+.est-b.good{color:var(--good);background:var(--good-soft)}
+.est-b.ok{color:var(--warn);background:rgba(255,206,92,.14)}
+.est-b.no{color:var(--bad);background:var(--bad-soft)}
+.est-readout{background:var(--accent-soft);border-radius:var(--radius-sm);padding:12px 14px;font-size:14px;line-height:1.5;color:var(--text)}
+.est-readout b{color:var(--accent)}
+
+/* confidence prompt (predict-then-check) shown only on sampled problems */
+.game-conf{width:min(360px,90vw);margin:-6px auto 0}
+.game-conf[hidden]{display:none}
+.game-conf .meta-conf{margin:0}
+.game-conf .meta-conf-q{text-align:center}
+
+/* self-explanation pre-step (error review only, opt-in, non-timed) */
+.se-ov{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.55)}
+.se-card{background:var(--s1);border:1px solid var(--line);border-radius:var(--radius);max-width:420px;width:100%;padding:24px}
+.se-q{font-weight:700;font-size:1.06rem;line-height:1.4}
+.se-hint{color:var(--muted);font-size:.9rem;margin-top:8px;line-height:1.55}
+.se-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.se-chip{padding:9px 13px;border-radius:var(--radius-sm);background:var(--s2);border:1px solid var(--line);color:var(--muted);font-weight:600;font-size:13px;cursor:pointer;transition:all var(--dur-fast,.12s)}
+.se-chip:hover{color:var(--text);border-color:var(--accent-soft)}
+.se-chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.se-go{margin-top:16px;width:100%}
+
 .game-foot{display:flex;justify-content:center;gap:12px;padding-bottom:6px}
 
 /* ===== RESULTS ===== */
@@ -299,6 +326,53 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 .empty-state .es-ic svg{width:18px;height:18px;vertical-align:-3px;color:var(--good)}
 .res-actions{display:flex;gap:12px;margin-top:24px}
 .res-actions .btn{flex:1}
+
+/* run time-series + per-fact heat-map (premium, theme-driven) */
+.rchart{margin-top:22px}
+.rchart svg{width:100%;height:auto;display:block;border-radius:var(--radius-sm)}
+.rchart-legend{display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:12px;color:var(--muted)}
+.rchart-legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.rheat{margin-top:22px}
+.rheat-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;max-width:420px;margin:10px auto 0}
+.rheat-cell{aspect-ratio:1;border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:9px;color:var(--faint);background:transparent}
+.rheat-cell.rh-h{color:var(--muted);font-weight:700}
+.rheat-cell.rh-d{color:transparent}
+.rheat-cell.rh-untouched{background:var(--s3)}
+.rheat-cell.rh-weak{background:var(--bad)}
+.rheat-cell.rh-learning{background:var(--warn)}
+.rheat-cell.rh-mastered{background:var(--good)}
+.rheat-cell.rh-fluent{background:var(--good);box-shadow:0 0 0 1px var(--good) inset,0 0 8px var(--good-soft);position:relative}
+.rheat-cell.rh-fluent::after{content:"";position:absolute;width:4px;height:4px;border-radius:50%;background:var(--on-accent,#fff);opacity:.95}
+.rheat-leg i.rh-leg-fluent{background:var(--good);box-shadow:0 0 6px var(--good-soft);position:relative}
+.rheat-leg i.rh-leg-fluent::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:3px;height:3px;border-radius:50%;background:var(--on-accent,#fff)}
+.rheat-cell.rh-leak{box-shadow:0 0 0 2px var(--text) inset}
+.rheat-cell.rh-clk{cursor:pointer}
+.rheat-cell.rh-clk:hover{transform:scale(1.18);transition:transform .12s}
+.rheat-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+.rheat-leg{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted)}
+.rheat-leg i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.rheat-note{text-align:center;color:var(--muted);font-size:13px;margin-top:10px;line-height:1.5;min-height:1.2em}
+.rheat-note b{color:var(--text)}
+
+/* daily goal — self-chosen, mastery-framed, forgiving streak (no dark patterns) */
+.goal-card{display:flex;align-items:center;gap:16px;width:100%;max-width:560px;margin:14px auto 0;padding:14px 18px;background:var(--s2);border:1px solid var(--line);border-radius:var(--radius)}
+.goal-card.met{background:var(--good-soft);border-color:var(--good)}
+.goal-ring{--p:0;flex:0 0 auto;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) calc(var(--p)*1%), var(--s3) 0);position:relative}
+.goal-card.met .goal-ring{background:conic-gradient(var(--good) calc(var(--p)*1%), var(--s3) 0)}
+.goal-ring::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--s2)}
+.goal-card.met .goal-ring::after{background:var(--good-soft)}
+.goal-ringv{position:relative;z-index:1;font-size:.82rem;font-weight:800;color:var(--text)}
+.goal-body{flex:1 1 auto;min-width:0}
+.goal-t{font-weight:600;font-size:1.02rem}
+.goal-sub{color:var(--muted);font-size:.88rem;margin-top:2px;line-height:1.4}
+.goal-sub b{color:var(--text)}
+.goal-streak{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;font-weight:800;color:var(--accent);font-size:1rem;font-variant-numeric:tabular-nums}
+.goal-streak svg{width:18px;height:18px}
+.goal-set{display:block;width:100%;max-width:560px;margin:14px auto 0;padding:13px 16px;text-align:left;background:var(--s2);border:1px dashed var(--line);border-radius:var(--radius);color:var(--muted);font-size:.92rem;line-height:1.45;cursor:pointer;transition:all var(--dur,.2s)}
+.goal-set:hover{border-color:var(--accent);color:var(--text)}
+.goal-set b{color:var(--accent)}
+.goal-amount-inp{width:96px;background:var(--s2);border:1px solid var(--line);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font-mono);font-size:16px;padding:9px 12px;text-align:center}
+.goal-amount-inp:focus{outline:none;border-color:var(--accent)}
 
 /* ===== STATS ===== */
 .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -451,6 +525,8 @@ body.noanim *{animation:none !important;transition:none !important}
     </div>
 
     <div id="home-session"></div>
+    <div id="home-exam"></div>
+    <div id="home-goal"></div>
 
     <div class="card config" style="margin-top:28px">
       <div class="row">
@@ -459,6 +535,7 @@ body.noanim *{animation:none !important;transition:none !important}
           <div class="seg" id="mode-seg">
             <button data-mode="adaptive" class="on">Адаптив · поток</button>
             <button data-mode="sprint">Спринт · Zetamac</button>
+            <button data-mode="survival">Выживание</button>
           </div>
         </div>
       </div>
@@ -490,7 +567,7 @@ body.noanim *{animation:none !important;transition:none !important}
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" id="dur-row">
         <div class="label">Время</div>
         <div class="field">
           <div class="dur-opts" id="dur-opts">
@@ -528,11 +605,13 @@ body.noanim *{animation:none !important;transition:none !important}
 
       <div class="arena">
         <div class="problem tnum" id="problem"><span>0</span><span class="opsym">+</span><span>0</span></div>
+        <div class="est-hint" id="est-hint" hidden></div>
         <div class="answer-shell" id="answer-shell">
           <input id="answer" inputmode="numeric" autocomplete="off" autocapitalize="off"
                  spellcheck="false" placeholder="?" aria-label="Ваш ответ">
           <div class="fb" id="fb" aria-live="polite"></div>
         </div>
+        <div class="game-conf" id="g-conf" hidden></div>
         <div class="numpad" id="numpad">
           <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
           <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
@@ -562,6 +641,10 @@ body.noanim *{animation:none !important;transition:none !important}
         <div class="metric"><div class="v tnum" id="m-p90">0.0с</div><div class="k">p90 время</div></div>
       </div>
       <div class="opbreak" id="op-break"></div>
+      <div id="res-chart"></div>
+      <div id="res-est"></div>
+      <div id="res-calib"></div>
+      <div id="res-heat"></div>
       <div class="mistakes" id="mistakes"></div>
       <div class="res-actions">
         <button class="btn ghost" id="res-home">На главную</button>
@@ -619,6 +702,22 @@ body.noanim *{animation:none !important;transition:none !important}
         </div>
       </div>
       <div class="set-row">
+        <div class="info"><div class="t">Спрашивать уверенность</div><div class="d">Иногда перед проверкой спросит «насколько уверен». Откалибрует самооценку, а уверенные ошибки вернёт на пересдачу — так они исправляются прочнее всего</div></div>
+        <div class="seg sm" id="conf-seg">
+          <button type="button" data-cf="off">Выкл</button>
+          <button type="button" data-cf="sample">Иногда</button>
+          <button type="button" data-cf="always">Всегда</button>
+        </div>
+      </div>
+      <div class="set-row">
+        <div class="info"><div class="t">Саморефлексия при ошибке</div><div class="d">Перед разбором (не в спринте) на секунду спросит, как ты считал. Объяснить себе «почему» — закрепляет метод прочнее</div></div>
+        <button class="toggle" id="t-selfexplain"></button>
+      </div>
+      <div class="set-row">
+        <div class="info"><div class="t">Прикидка перед ответом</div><div class="d">На крупных ответах (≥100) сначала попросит прикинуть порядок, потом посчитать точно. Главный приём сильных счётчиков — ловит грубые промахи и строит чувство величины</div></div>
+        <button class="toggle" id="t-estimate"></button>
+      </div>
+      <div class="set-row">
         <div class="info"><div class="t">Без анимаций</div><div class="d">Спокойный режим без движения</div></div>
         <button class="toggle" id="t-anim"></button>
       </div>
@@ -629,6 +728,19 @@ body.noanim *{animation:none !important;transition:none !important}
       <div class="set-row">
         <div class="info"><div class="t">Экранная клавиатура</div><div class="d">Показывать цифровую панель и на компьютере</div></div>
         <button class="toggle" id="t-pad"></button>
+      </div>
+      <div class="set-row">
+        <div class="info"><div class="t">Цель дня</div><div class="d">Сам выбери ежедневную норму. Серия мягкая — один пропуск прощается, за ошибки никто не наказывает. Короткая практика каждый день закрепляет навык лучше редких марафонов</div></div>
+        <div class="seg sm" id="goal-seg">
+          <button type="button" data-g="off">Выкл</button>
+          <button type="button" data-g="problems">Задачи</button>
+          <button type="button" data-g="sessions">Сессии</button>
+          <button type="button" data-g="minutes">Минуты</button>
+        </div>
+      </div>
+      <div class="set-row" id="goal-amount-row">
+        <div class="info"><div class="t">Норма на день</div><div class="d">Сколько в день для выполнения цели</div></div>
+        <input id="goal-amount" type="number" min="1" max="100000" class="goal-amount-inp" value="50" aria-label="Норма цели на день">
       </div>
       <div class="set-row">
         <div class="info"><div class="t">Акцент</div><div class="d">Цвет интерфейса</div></div>
@@ -649,7 +761,9 @@ body.noanim *{animation:none !important;transition:none !important}
     <div class="foot-note">
       Честно о «прокачке мозга»: тренажёр реально и измеримо улучшает навык счёта и делает тебя быстрее
       в этих конкретных упражнениях. Рост общего IQ «играми для мозга» наука не подтверждает — и мы этого не обещаем.
-      Настоящая польза: полезный ежедневный навык и сфокусированная тренировка внимания и рабочей памяти.
+      Что действительно работает и встроено здесь: <b>интервальные повторения</b> (FSRS), <b>припоминание по памяти</b>,
+      <b>разбор и пересдача ошибок</b> и <b>чувство величины числа</b> — на них навык и держится. N-back, Струп и анзан —
+      честные упражнения на рабочую память и внимание, не «тренажёр математики».
     </div>
   </section>
 </div>
@@ -678,6 +792,10 @@ function defaultState(){
       custom:{addMin:2,addMax:100,mulAMin:2,mulAMax:12,mulBMin:2,mulBMax:100},
       sound:true, haptics:true, autoAdvance:true, noanim:false, forcePad:false,
       teachMode:"interactive",
+      confidence:"off",
+      selfExplain:false,
+      estimateFirst:false,
+      goal:{type:"off",amount:50},
       calmMode:false,
       accent:0,
       theme:"dark"
@@ -693,7 +811,8 @@ function defaultState(){
     facts:{},
     mastery:{},
     meta:{},
-    sessionLog:[]
+    sessionLog:[],
+    exams:[]
   };
 }
 let S=load();
@@ -762,6 +881,16 @@ function genProblem(op){
   }
   return {op,a,b,sym,ans};
 }
+/* generate an adaptive-style problem at an explicit level (used by Survival ramp) */
+function genProblemAt(op,lvl){
+  const r=adaptiveRanges(op,clamp(lvl,1,40));
+  let a,b,ans,sym=OPS[op];
+  if(op==="add"){a=rand(2,r.max);b=rand(2,r.max);ans=a+b;}
+  else if(op==="sub"){const s=rand(2,r.max),d=rand(2,r.max);a=s+d;b=d;ans=s;}
+  else if(op==="mul"){a=rand(2,r.aMax);b=rand(2,r.bMax);ans=a*b;}
+  else {const div=rand(2,r.aMax),q=rand(2,r.bMax);a=div*q;b=div;ans=q;}
+  return {op,a,b,sym,ans};
+}
 
 /* weighted up-down → target ~85% (S_down/S_up = .85/.15) */
 const S_UP=0.11, S_DOWN=S_UP*(0.85/0.15);
@@ -809,7 +938,7 @@ function go(v){
   $("#view-"+v).classList.add("active");
   $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
   if(v==="stats")renderStats();
-  if(v==="home"){renderBest();renderHomeModules();runHomeHooks();}
+  if(v==="home"){renderBest();renderHomeModules();renderGoal();runHomeHooks();}
   window.scrollTo({top:0,behavior:"smooth"});
 }
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(b){if(game.active)endGame(true);go(b.dataset.view);}});
@@ -823,6 +952,7 @@ function syncHome(){
   $$("#preset-seg button").forEach(b=>b.classList.toggle("on",b.dataset.preset===S.settings.preset));
   $$("#dur-opts .dur").forEach(b=>b.classList.toggle("on",+b.dataset.dur===S.settings.duration));
   $("#preset-row").style.display=S.settings.mode==="sprint"?"flex":"none";
+  $("#dur-row").style.display=S.settings.mode==="survival"?"none":"";
   $("#custom-ranges").classList.toggle("show",S.settings.mode==="sprint"&&S.settings.preset==="custom");
   const c=S.settings.custom;
   $("#c-add-min").value=c.addMin;$("#c-add-max").value=c.addMax;
@@ -845,7 +975,52 @@ function cfgSig(){
 }
 function renderBest(){
   const best=S.bests[cfgSig()];
+  if(S.settings.mode==="survival"){
+    $("#bestline").innerHTML=best?`Лучшая глубина: <b>${best}</b> · до 3 ошибок, без таймера`:`Выживание: сложность растёт, 3 ошибки — конец. Без таймера.`;
+    return;
+  }
   $("#bestline").innerHTML=best?`Лучший результат: <b>${best}</b> верных`:`Новая конфигурация — установи первый рекорд`;
+}
+
+/* ---- daily goal (self-chosen) + forgiving streak ---- */
+function goalCfg(){const g=S.settings.goal;return (g&&g.type)?g:{type:"off",amount:0};}
+function dayKeyOf(ts){const d=new Date(ts);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function shiftDayKey(k,delta){const p=k.split("-").map(Number);const d=new Date(p[0],p[1]-1,p[2]);d.setDate(d.getDate()+delta);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function goalDayValue(type,dayKey){
+  if(type==="problems")return (S.daily&&S.daily[dayKey])||0;
+  if(type==="sessions")return (S.sessions||[]).filter(s=>dayKeyOf(s.ts)===dayKey).length;
+  if(type==="minutes")return Math.round((S.sessions||[]).filter(s=>dayKeyOf(s.ts)===dayKey).reduce((a,s)=>a+(s.elapsed||0),0)/60);
+  return 0;
+}
+function computeGoal(){
+  const g=goalCfg();
+  if(g.type==="off"||!g.amount||g.amount<1)return null;
+  const today=todayKey();
+  const todayVal=goalDayValue(g.type,today);
+  const met=todayVal>=g.amount;
+  let streak=0,freeze=true,dk=met?today:shiftDayKey(today,-1);
+  for(let i=0;i<400;i++){
+    if(goalDayValue(g.type,dk)>=g.amount){streak++;dk=shiftDayKey(dk,-1);}
+    else if(freeze){freeze=false;dk=shiftDayKey(dk,-1);}
+    else break;
+  }
+  return {type:g.type,amount:g.amount,todayVal:todayVal,met:met,streak:streak,pct:Math.min(100,Math.round(todayVal/g.amount*100))};
+}
+function renderGoal(){
+  const el=$("#home-goal");if(!el)return;
+  const g=computeGoal();
+  if(!g){
+    el.innerHTML='<button class="goal-set" id="goal-set" type="button">Поставь <b>цель дня</b> — короткая ежедневная практика закрепляет навык надёжнее редких марафонов →</button>';
+    const b=el.querySelector("#goal-set");
+    if(b)b.addEventListener("click",function(){go("settings");setTimeout(function(){const r=document.getElementById("goal-seg");if(r)r.scrollIntoView({behavior:"smooth",block:"center"});},140);});
+    return;
+  }
+  const unit=g.type==="problems"?"задач":(g.type==="sessions"?"сессий":"мин");
+  const flame=(window.MICONS&&MICONS.flame)||"";
+  const streakHtml=g.streak>0?('<div class="goal-streak" title="Серия дней с выполненной целью">'+flame+g.streak+'</div>'):'';
+  const sub=g.met?('Цель дня выполнена — <b>'+g.todayVal+'</b> '+unit+'. Так держать.'):('Сегодня <b>'+g.todayVal+'</b> из '+g.amount+' '+unit+' — почти.');
+  el.innerHTML='<div class="goal-card '+(g.met?'met':'')+'"><div class="goal-ring" style="--p:'+g.pct+'"><div class="goal-ringv">'+g.pct+'%</div></div>'+
+    '<div class="goal-body"><div class="goal-t">Цель дня</div><div class="goal-sub">'+sub+'</div></div>'+streakHtml+'</div>';
 }
 
 /* ============================================================
@@ -870,9 +1045,18 @@ function startGame(){
     mistakes:[],
     startTs:performance.now(),
     pausedTotal:0, pausedAt:0,
-    cur:null, shownAt:0, locked:false
+    cur:null, shownAt:0, locked:false,
+    reAsk:[], askConf:false, confAsked:false, lastConf:0,
+    askEst:false, estPhase:null, estVal:null, estQuality:null, estN:0, estGood:0, estOrder:0,
+    timeline:[]
   };
   ops.forEach(o=>game.perOp[o]={correct:0,attempts:0,rts:[]});
+  if(game.mode==="survival"){
+    game.untimed=true;
+    game.strikes=0; game.maxStrikes=3; game.escEvery=3; game.survStreak=0; game.survDepth=0;
+    const avg=ops.reduce((s,o)=>s+(S.ratings[o]||3),0)/ops.length;
+    game.survLevel=clamp(Math.round(avg),3,12);
+  }
   $("#g-correct").textContent="0";
   $("#g-acc").textContent="—";
   $("#numpad").classList.toggle("force",S.settings.forcePad);
@@ -888,9 +1072,18 @@ function gameElapsed(){
 }
 function pauseGame(){ if(!game.active||game.pausedAt)return; game.pausedAt=performance.now(); }
 function resumeGame(){ if(!game.pausedAt)return; game.pausedTotal=(game.pausedTotal||0)+(performance.now()-game.pausedAt); game.pausedAt=0; }
+function renderSurvivalHUD(){
+  const fill=$("#timerbar").querySelector("i"), num=$("#timer");
+  const maxS=game.maxStrikes||3, left=Math.max(0,maxS-(game.strikes||0));
+  num.textContent="ур. "+Math.round(game.survLevel||1)+" · ✕ "+(game.strikes||0)+"/"+maxS;
+  if(fill)fill.style.width=(left/maxS*100)+"%";
+  const low=left<=1;
+  num.classList.toggle("low",low);$("#timerbar").classList.toggle("low",low);
+}
 function startTimer(){
   clearInterval(timerId);
   const bar=$("#timerbar"), num=$("#timer");
+  if(game.mode==="survival"){ renderSurvivalHUD(); return; }
   if(game.untimed){
     bar.parentElement.querySelector("i") && (bar.querySelector("i").style.width="100%");
     timerId=setInterval(()=>{
@@ -913,32 +1106,113 @@ function startTimer(){
   timerId=setInterval(tick,200);
 }
 
-function nextProblem(){
-  const op=game.ops[Math.floor(Math.random()*game.ops.length)];
-  game.cur=genProblem(op);
+function shouldAskConf(){
+  const c=S.settings.confidence||"off";
+  if(c==="off"||game.mode==="survival")return false; // never tax the no-clock streak
+  if(c==="always")return true;
+  return Math.random()<0.22; // "sample"
+}
+// estimate-first: the elite "sanity-check" habit — commit to a ballpark before
+// computing. Only on big answers (estimation is trivial for small ones).
+function shouldAskEst(){
+  // adaptive (deliberate-practice) mode only — never the timed Sprint (wrecks the rate metric) or Survival
+  if(!S.settings.estimateFirst||game.mode!=="adaptive")return false;
+  return Math.abs(game.cur.ans)>=100;
+}
+function evalEstimate(est,ans){
+  est=Math.abs(est);ans=Math.abs(ans);
+  if(!isFinite(est)||est<=0||ans<=0)return "miss";
+  const r=est/ans;
+  if(r>=0.8&&r<=1.25)return "good";                                            // within ~±20-25%
+  if(Math.floor(Math.log10(est))===Math.floor(Math.log10(ans)))return "order"; // right order of magnitude
+  return "miss";
+}
+function estBadge(q){
+  if(q==="good")return '<span class="est-b good">прикидка: в точку</span>';
+  if(q==="order")return '<span class="est-b ok">прикидка: верный порядок</span>';
+  return '<span class="est-b no">прикидка: мимо порядка</span>';
+}
+function setEstHint(phase){
+  const h=$("#est-hint"),inp=$("#answer");
+  if(phase==="est"){h.hidden=false;h.textContent="Сначала прикинь — примерно сколько?";if(inp)inp.placeholder="≈ ?";}
+  else if(phase==="exact"){h.hidden=false;h.textContent="Теперь посчитай точно";if(inp)inp.placeholder="?";}
+  else{h.hidden=true;h.textContent="";if(inp)inp.placeholder="?";}
+}
+function submitEstimate(est){
+  game.estVal=est;
+  game.estQuality=evalEstimate(est,game.cur.ans);
+  game.estN++;
+  if(game.estQuality==="good")game.estGood++;else if(game.estQuality==="order")game.estOrder++;
+  game.estPhase="exact";
+  const inp=$("#answer");inp.value="";
+  setEstHint("exact");
+  try{beep(560,0.045,"sine",0.04);}catch(e){}
+  if(inp)inp.focus();
+}
+function pickReAsk(){
+  // hypercorrection: re-test a confident-wrong item a few problems later
+  if(!game.reAsk||!game.reAsk.length)return null;
+  for(let i=0;i<game.reAsk.length;i++)game.reAsk[i].in--;
+  const k=game.reAsk.findIndex(x=>x.in<=0);
+  if(k<0)return null;
+  const it=game.reAsk.splice(k,1)[0];
+  return it.p;
+}
+function nextProblem(forced){
+  let cur=forced||null;
+  if(!cur)cur=pickReAsk();
+  if(!cur){
+    const op=game.ops[Math.floor(Math.random()*game.ops.length)];
+    cur=(game.mode==="survival")?genProblemAt(op,game.survLevel):genProblem(op);
+  }
+  game.cur=cur;
   game.locked=false;
+  game.askConf=shouldAskConf();
+  game.confAsked=false;
+  game.askEst=shouldAskEst();
+  if(game.askEst)game.askConf=false; // don't stack two pre-steps on one problem
+  game.estPhase=game.askEst?"est":null;
+  game.estVal=null;game.estQuality=null;
+  const inp=$("#answer");
+  inp.readOnly=false;
+  setEstHint(game.askEst?"est":null);
+  const gc=$("#g-conf");if(gc){gc.hidden=true;gc.innerHTML="";}
   const p=$("#problem");
   p.innerHTML=`<span>${game.cur.a}</span><span class="opsym">${game.cur.sym}</span><span>${game.cur.b}</span>`;
   if(!S.settings.noanim){p.classList.remove("swap");void p.offsetWidth;p.classList.add("swap");}
-  $("#answer").value="";
+  inp.value="";
   $("#answer-shell").classList.remove("correct","wrong");
   $("#fb").classList.remove("show","ok","no");
   game.shownAt=performance.now();
-  $("#answer").focus();
+  inp.focus();
 }
 
 function registerAnswer(correct){
   const rt=performance.now()-game.shownAt;
   const op=game.cur.op;
   game.attempts++;game.perOp[op].attempts++;
+  game.timeline.push({correct:!!correct,rt:rt,op:op});
   bumpDaily();
   if(correct){
     game.correct++;game.perOp[op].correct++;
     game.rts.push(rt);game.perOp[op].rts.push(rt);
+    // FIRe-lite: a correct composite pays down review-debt on the atomic facts it used;
+    // rt feeds the per-fact fluency (automaticity) signal.
+    try{ if(window.MentisFacts&&MentisFacts.creditProblem) MentisFacts.creditProblem(op,game.cur.a,game.cur.b,true,rt); }catch(e){}
   }else{
     game.mistakes.push({op,a:game.cur.a,b:game.cur.b,sym:game.cur.sym,ans:game.cur.ans,you:$("#answer").value||"—"});
   }
   updateRating(op,correct,rt);
+  if(game.mode==="survival"){
+    if(correct){
+      game.survStreak=(game.survStreak||0)+1;
+      if(game.survStreak%(game.escEvery||3)===0)game.survLevel=clamp((game.survLevel||4)+1,1,40);
+      game.survDepth=game.correct;
+    }else{
+      game.strikes=(game.strikes||0)+1;
+    }
+    renderSurvivalHUD();
+  }
   $("#g-correct").textContent=game.correct;
   $("#g-acc").textContent=Math.round(game.correct/game.attempts*100)+"%";
 }
@@ -957,42 +1231,108 @@ function flashWrong(){
 }
 
 function handleValueChange(){
-  if(!game.active||game.locked)return;
+  if(!game.active||game.locked||game.confAsked)return;
   const v=$("#answer").value.replace(/[^\d]/g,"");
   if($("#answer").value!==v)$("#answer").value=v;
-  if(S.settings.autoAdvance && v!=="" && +v===game.cur.ans){
+  if(!game.askConf && !game.askEst && S.settings.autoAdvance && v!=="" && +v===game.cur.ans){
     game.locked=true;
     registerAnswer(true);
     flashCorrect();
     setTimeout(nextProblem,S.settings.noanim?40:150);
   }
 }
+function finishAnswer(correct){
+  if(correct){
+    registerAnswer(true);flashCorrect();
+    if(game.askEst&&game.estQuality){const fb=$("#fb");fb.innerHTML=estBadge(game.estQuality);fb.classList.add("show",game.estQuality==="miss"?"no":"ok");}
+    setTimeout(nextProblem,game.askEst?900:(S.settings.noanim?40:150));
+  }else{onWrong();}
+}
 function commit(){
-  if(!game.active||game.locked)return;
+  if(!game.active||game.locked||game.confAsked)return;
   const v=$("#answer").value.replace(/[^\d]/g,"");
   if(v==="")return;
+  if(game.askEst&&game.estPhase==="est"){submitEstimate(+v);return;}
+  if(game.askConf){promptConfidence();return;}
   game.locked=true;
-  if(+v===game.cur.ans){
-    registerAnswer(true);flashCorrect();
-    setTimeout(nextProblem,S.settings.noanim?40:150);
-  }else{
-    onWrong();
+  finishAnswer(+v===game.cur.ans);
+}
+// predict-then-check: capture confidence before judging, then exploit the
+// hypercorrection effect — a confident wrong answer is re-tested a few problems later.
+function promptConfidence(){
+  const gc=$("#g-conf");
+  if(!gc||!(window.MentisMeta&&MentisMeta.confidenceChips&&MentisMeta.attachConfidence)){
+    game.locked=true;finishAnswer(+($("#answer").value.replace(/[^\d]/g,""))===game.cur.ans);return;
   }
+  game.confAsked=true;
+  const v=$("#answer").value.replace(/[^\d]/g,"");
+  const inp=$("#answer");inp.readOnly=true;inp.blur();
+  gc.innerHTML=MentisMeta.confidenceChips();
+  gc.hidden=false;
+  MentisMeta.attachConfidence(gc,function(conf){
+    gc.hidden=true;gc.innerHTML="";
+    if(game.locked)return;
+    game.locked=true;
+    const correct=(v!==""&&+v===game.cur.ans);
+    game.lastConf=conf;
+    try{MentisMeta.logConfidence(conf,correct);}catch(e){}
+    if(!correct&&conf===3)scheduleReAsk(game.cur);
+    finishAnswer(correct);
+  });
+}
+function scheduleReAsk(cur){
+  if(!cur)return;
+  if(!game.reAsk)game.reAsk=[];
+  if(game.reAsk.length>=4)return;
+  game.reAsk.push({p:{op:cur.op,a:cur.a,b:cur.b,sym:cur.sym,ans:cur.ans},in:2+Math.floor(Math.random()*2)});
+}
+// self-explanation: one brief reflective pause before the worked fix (opt-in,
+// non-timed, and skipped for slip-type errors where reflection adds little).
+function selfExplainPrompt(etype,cb){
+  if(!S.settings.selfExplain||game.mode==="sprint"||game.mode==="survival"){cb();return;}
+  const ty=etype&&etype.type;
+  if(ty==="slip"){cb();return;}
+  const ov=document.createElement("div");ov.className="se-ov";
+  ov.innerHTML='<div class="se-card" role="dialog" aria-modal="true" aria-label="Саморефлексия">'+
+    '<div class="se-q">Прежде чем смотреть разбор</div>'+
+    '<div class="se-hint">Назови про себя: какой приём ты применил — и почему он должен работать? Объяснить себе «почему» закрепляет метод прочнее, чем просто увидеть готовый ответ.</div>'+
+    '<div class="se-chips" id="se-chips">'+
+      '<button class="se-chip" type="button">Считал в лоб</button>'+
+      '<button class="se-chip" type="button">Округлял и поправлял</button>'+
+      '<button class="se-chip" type="button">Разбивал на части</button>'+
+      '<button class="se-chip" type="button">Не уверен в способе</button>'+
+    '</div>'+
+    '<button class="btn se-go" id="se-go" type="button">Показать разбор →</button>'+
+  '</div>';
+  document.body.appendChild(ov);
+  ov.querySelector("#se-chips").addEventListener("click",function(e){const b=e.target.closest(".se-chip");if(!b)return;[].slice.call(e.currentTarget.children).forEach(x=>x.classList.toggle("on",x===b));});
+  let done=false;const finish=function(){if(done)return;done=true;try{ov.remove();}catch(e){}cb();};
+  ov.querySelector("#se-go").addEventListener("click",finish);
+  setTimeout(function(){const g=ov.querySelector("#se-go");if(g)g.focus();},30);
 }
 function skip(){
-  if(!game.active||game.locked)return;
+  if(!game.active||game.locked||game.confAsked)return;
   game.locked=true;
   onWrong();
 }
 function onWrong(){
   registerAnswer(false);
   flashWrong();
+  if(game.askEst&&game.estQuality){const fb=$("#fb");if(fb)fb.innerHTML+=' · '+estBadge(game.estQuality);}
   const cur=game.cur;
   let lesson=null;
   try{ if(window.MentisCoach) lesson=window.MentisCoach.explain(cur.a,cur.op,cur.b); }catch(e){}
   let etype=null;
   try{ if(window.MentisMeta&&window.MentisMeta.classifyError) etype=window.MentisMeta.classifyError(lesson,($("#answer").value||"")); }catch(e){}
+  // FIRe-lite: a fact-type slip pushes a penalty down onto the implicated atomic fact
+  try{ if(etype&&etype.type==="fact"&&window.MentisFacts&&MentisFacts.creditProblem) MentisFacts.creditProblem(cur.op,cur.a,cur.b,false); }catch(e){}
   try{ if(window.MentisMistakes) window.MentisMistakes.log({a:cur.a,op:cur.op,b:cur.b,answer:cur.ans,given:($("#answer").value||"—"),method:lesson&&lesson.method,methodTitle:lesson&&lesson.methodTitle,errorType:etype,context:game.mode}); }catch(e){}
+  if(game.mode==="survival"){
+    // preserve flow: no mid-run teaching (Puzzle-Rush pattern) — review is deferred to the debrief
+    if((game.strikes||0)>=(game.maxStrikes||3)){ setTimeout(function(){endGame(false);},S.settings.noanim?500:1000); }
+    else { setTimeout(nextProblem,S.settings.noanim?420:900); }
+    return;
+  }
   const tm=S.settings.teachMode||"interactive";
   if(tm==="interactive" && window.MentisTeach && lesson){
     pauseGame();
@@ -1002,10 +1342,9 @@ function onWrong(){
     const faded= ex<1?"worked":(ex<3?"completion":"independent");
     S.coachExposure[mk]=ex+1; save();
     let done=false;
-    try{
-      var _opener=(window.MentisPretest&&window.MentisPretest.openWithPretest)?window.MentisPretest.openWithPretest:window.MentisTeach.open;
-      _opener(lesson,{faded:faded,onClose:function(){ if(done)return; done=true; resumeGame(); if(game.active)nextProblem(); }});
-    }catch(e){ resumeGame(); setTimeout(nextProblem,300); }
+    var _opener=(window.MentisPretest&&window.MentisPretest.openWithPretest)?window.MentisPretest.openWithPretest:window.MentisTeach.open;
+    var openTeach=function(){ try{ _opener(lesson,{faded:faded,onClose:function(){ if(done)return; done=true; resumeGame(); if(game.active)nextProblem(); }}); }catch(e){ resumeGame(); setTimeout(nextProblem,300); } };
+    selfExplainPrompt(etype,openTeach);
   } else if(tm==="brief" && lesson){
     const fb=$("#fb"); if(fb){ fb.innerHTML='<span class="ic">✕</span> Верно: '+lesson.answer+' · приём: '+(lesson.methodTitle||"—"); fb.classList.add("show","no"); }
     setTimeout(nextProblem,S.settings.noanim?700:1500);
@@ -1020,7 +1359,7 @@ $("#answer").addEventListener("keydown",e=>{
   else if(e.key==="Escape"){e.preventDefault();skip();}
 });
 $("#numpad").addEventListener("click",e=>{
-  const b=e.target.closest("button");if(!b||!game.active)return;
+  const b=e.target.closest("button");if(!b||!game.active||game.confAsked)return;
   const k=b.dataset.k, inp=$("#answer");
   if(k==="back")inp.value=inp.value.slice(0,-1);
   else if(k==="enter"){commit();return;}
@@ -1054,6 +1393,7 @@ function endGame(silent){
     p90Rt:pctile(game.rts,0.9),
     perOp:Object.fromEntries(Object.entries(game.perOp).map(([o,d])=>[o,{correct:d.correct,attempts:d.attempts,medRt:median(d.rts),p90Rt:pctile(d.rts,0.9)}]))
   };
+  if(game.mode==="survival"){session.survLevel=Math.round(game.survLevel||1);session.survDepth=game.correct;}
   S.sessions.push(session);
   if(S.sessions.length>200)S.sessions=S.sessions.slice(-200);
   S.mistakes=[...game.mistakes,...S.mistakes].slice(0,60);
@@ -1068,7 +1408,7 @@ function endGame(silent){
 function showResults(ss,rec){
   $("#res-score").textContent=ss.correct;
   $("#res-score").classList.toggle("rec",rec);
-  $("#res-sub").textContent=ss.attempts?`из ${ss.attempts} задач · ${ss.mode==="adaptive"?"адаптив":"спринт"}`:"нет ответов";
+  $("#res-sub").textContent=ss.attempts?(ss.mode==="survival"?`глубина ${ss.correct} · уровень ${ss.survLevel||1} · выживание`:`из ${ss.attempts} задач · ${ss.mode==="adaptive"?"адаптив":"спринт"}`):"нет ответов";
   $("#res-rec").innerHTML=rec?`<div class="badge-rec">★ Новый рекорд!</div>`:"";
   $("#m-ppm").textContent=ss.ppm.toFixed(1);
   $("#m-acc").textContent=Math.round(ss.acc*100)+"%";
@@ -1084,6 +1424,11 @@ function showResults(ss,rec){
        <div class="track"><i style="width:${pc}%"></i></div>
        <div class="pc tnum">${d.correct}/${d.attempts} · ${(d.medRt/1000).toFixed(1)}с</div></div>`);
   });
+  // run time-series, estimate readout, calibration, and the per-fact heat-map
+  renderRunChart($("#res-chart"));
+  renderEstReadout($("#res-est"));
+  renderCalibration($("#res-calib"));
+  renderFactHeatmap($("#res-heat"));
   // mistakes
   const mc=$("#mistakes");
   if(game.mistakes && game.mistakes.length){
@@ -1109,6 +1454,109 @@ function teachList(list,i){
   if(!lesson){ teachList(list,i+1); return; }
   let done=false;
   window.MentisTeach.open(lesson,{faded:"completion",allowPractice:false,onClose:function(){ if(done)return; done=true; teachList(list,i+1); }});
+}
+function renderCalibration(el){
+  if(!el)return;
+  el.innerHTML="";
+  if(!(window.MentisMeta&&MentisMeta.calibration))return;
+  let c;try{c=MentisMeta.calibration();}catch(e){return;}
+  if(!c||!c.byConf)return;
+  const totN=c.byConf.reduce((s,r)=>s+(r.n||0),0);
+  if(totN<5)return; // not enough self-ratings to be meaningful yet
+  let rows="";
+  c.byConf.forEach(r=>{
+    const has=r.rightPct!=null;
+    const pct=has?Math.round(r.rightPct*100):0;
+    const tgt=Math.round(r.target*100);
+    rows+=`<div class="meta-calib-row"><div class="meta-calib-lab">${r.label}</div>`+
+      `<div class="meta-calib-bar"><div class="meta-calib-fill" style="width:${pct}%"></div><div class="meta-calib-tick" style="left:${tgt}%"></div></div>`+
+      `<div class="meta-calib-val">${has?(pct+"% · "+r.n+" шт"):"—"}</div></div>`;
+  });
+  const cls=/переоцен|перепроверяйте/i.test(c.summary)?"over":(/недооценка|точнее/i.test(c.summary)?"under":"ok");
+  el.innerHTML=`<h2 class="section" style="margin:18px 0 8px">Калибровка уверенности</h2>`+
+    `<div class="meta-calib">${rows}</div>`+
+    `<div class="meta-summary ${cls}">${c.summary}</div>`;
+}
+// run time-series: cumulative accuracy + rolling speed across this run
+function renderRunChart(el){
+  if(!el)return;el.innerHTML="";
+  const tl=(game&&game.timeline)||[];
+  if(tl.length<4)return;
+  const W=360,H=130,P=14,innerW=W-2*P,innerH=H-2*P,n=tl.length;
+  let cum=0;const acc=tl.map((t,i)=>{cum+=t.correct?1:0;return cum/(i+1);});
+  const win=5;const roll=tl.map((t,i)=>{let s=0,c=0;for(let j=Math.max(0,i-win+1);j<=i;j++){s+=tl[j].rt;c++;}return s/c;});
+  const maxRt=Math.max.apply(null,roll),minRt=Math.min.apply(null,roll);
+  const xOf=i=>P+(n===1?0:i/(n-1)*innerW);
+  const yAcc=v=>P+(1-v)*innerH;
+  const yRt=v=>{const f=maxRt===minRt?0.5:(v-minRt)/(maxRt-minRt);return P+f*innerH;};
+  const accPts=acc.map((v,i)=>xOf(i).toFixed(1)+","+yAcc(v).toFixed(1)).join(" ");
+  const rtPts=roll.map((v,i)=>xOf(i).toFixed(1)+","+yRt(v).toFixed(1)).join(" ");
+  el.innerHTML=`<h2 class="section" style="margin:18px 0 4px">Ход забега</h2>`+
+    `<div class="rchart"><svg viewBox="0 0 ${W} ${H}" aria-label="Динамика точности и скорости по ходу забега">`+
+      `<line x1="${P}" y1="${P+innerH}" x2="${W-P}" y2="${P+innerH}" stroke="var(--line)" stroke-width="1"/>`+
+      `<polyline points="${rtPts}" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.5"/>`+
+      `<polyline points="${accPts}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`+
+    `</svg><div class="rchart-legend"><span><i style="background:var(--accent)"></i>точность (нарастающим итогом)</span><span><i style="background:var(--muted)"></i>скорость (выше — быстрее)</span></div></div>`;
+}
+// estimate-first readout: how often the ballpark guess landed in the right magnitude
+function renderEstReadout(el){
+  if(!el)return;el.innerHTML="";
+  if(!game||!game.estN)return;
+  const good=game.estGood||0,order=game.estOrder||0,inOrder=good+order,miss=game.estN-inOrder;
+  const ok=inOrder/game.estN>=0.7;
+  el.innerHTML=`<h2 class="section" style="margin:18px 0 8px">Прикидка</h2>`+
+    `<div class="est-readout"><b>${inOrder}/${game.estN}</b> оценок в правильном порядке · в точку ${good} · мимо ${miss}. `+
+    (ok?`Хорошее чувство величины — встроенная защита от грубых промахов.`:`Прикидка ловит бландеры раньше, чем ты их сделаешь — она быстро прокачивается.`)+`</div>`;
+}
+// per-fact heat-map over the times table — makes the invisible SRS state legible
+function renderFactHeatmap(el){
+  if(!el)return;el.innerHTML="";
+  if(!(window.MentisFacts&&MentisFacts.cardStat))return;
+  const LO=2,HI=12;
+  const leaks={};
+  ((game&&game.mistakes)||[]).forEach(m=>{if(m.op==="mul"){const lo=Math.min(m.a,m.b),hi=Math.max(m.a,m.b);if(lo>=LO&&hi<=HI)leaks[lo+"x"+hi]=true;}});
+  function cellInfo(a,b){
+    const lo=Math.min(a,b),hi=Math.max(a,b);
+    let st=null;try{st=MentisFacts.cardStat("mult:"+lo+"x"+hi);}catch(e){}
+    if(!st||(st.reps===0&&(st.stability||0)<=0))return {t:"untouched",fluent:false};
+    if(st.leech||(st.stability||0)<2)return {t:"weak",fluent:false};
+    if((st.intervalDays||0)>=21)return {t:"mastered",fluent:!!st.fluent};
+    return {t:"learning",fluent:false};
+  }
+  const counts={weak:0,learning:0,mastered:0,untouched:0,fluent:0};
+  let html=`<h2 class="section" style="margin:18px 0 4px">Карта таблицы умножения</h2><div class="rheat-grid">`;
+  html+=`<div class="rheat-cell rh-h rh-d">×</div>`;
+  for(let b=LO;b<=HI;b++)html+=`<div class="rheat-cell rh-h">${b}</div>`;
+  for(let a=LO;a<=HI;a++){
+    html+=`<div class="rheat-cell rh-h">${a}</div>`;
+    for(let b=LO;b<=HI;b++){
+      const ci=cellInfo(a,b);counts[ci.t]++;if(ci.fluent)counts.fluent++;
+      const lo=Math.min(a,b),hi=Math.max(a,b);
+      const leak=leaks[lo+"x"+hi]?" rh-leak":"";
+      const flu=ci.fluent?" rh-fluent":"";
+      html+=`<div class="rheat-cell rh-${ci.t}${flu}${leak} rh-clk" data-a="${a}" data-b="${b}" title="${a}×${b} = ${a*b}"></div>`;
+    }
+  }
+  html+=`</div>`;
+  html+=`<div class="rheat-legend">`+
+    `<span class="rheat-leg"><i class="rh-leg-fluent"></i>автоматизм ${counts.fluent}</span>`+
+    `<span class="rheat-leg"><i style="background:var(--good)"></i>усвоено ${counts.mastered}</span>`+
+    `<span class="rheat-leg"><i style="background:var(--warn)"></i>в работе ${counts.learning}</span>`+
+    `<span class="rheat-leg"><i style="background:var(--bad)"></i>слабые ${counts.weak}</span>`+
+    `<span class="rheat-leg"><i style="background:var(--s3)"></i>новые ${counts.untouched}</span></div>`;
+  const note=counts.weak?'Слабые места — красным. Нажми на клетку, чтобы разобрать приём.':(counts.fluent?'Яркие клетки с точкой — на автомате (верно и быстро). Нажми, чтобы разобрать приём.':'Нажми на любую клетку, чтобы разобрать её приём.');
+  html+=`<div class="rheat-note" id="rheat-note">${note}</div>`;
+  el.innerHTML=html;
+  el.querySelectorAll(".rheat-cell[data-a]").forEach(c=>{
+    c.addEventListener("click",()=>{
+      const a=+c.dataset.a,b=+c.dataset.b;
+      if(window.MentisCoach&&window.MentisTeach){
+        let lesson=null;try{lesson=MentisCoach.explain(a,"mul",b);}catch(e){}
+        if(lesson){window.MentisTeach.open(lesson,{faded:"worked",allowPractice:false,onClose:function(){}});return;}
+      }
+      const note=document.getElementById("rheat-note");if(note)note.innerHTML=`${a} × ${b} = <b>${a*b}</b>`;
+    });
+  });
 }
 $("#res-home").addEventListener("click",()=>go("home"));
 $("#res-again").addEventListener("click",startGame);
@@ -1224,10 +1672,17 @@ function hexRgb(hex){const n=parseInt(hex.slice(1),16);return `${(n>>16)&255},${
 function hexMix(hex,t){const n=parseInt(hex.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255,m=v=>Math.round(v+(255-v)*t);return `#${(1<<24|m(r)<<16|m(g)<<8|m(b)).toString(16).slice(1)}`;}
 function applyAnim(){document.body.classList.toggle("noanim",S.settings.noanim);}
 function syncSettings(){
-  const T={"t-sound":["sound","Звук"],"t-haptics":["haptics","Вибрация"],"t-auto":["autoAdvance","Авто-переход"],"t-anim":["noanim","Без анимаций"],"t-pad":["forcePad","Экранная клавиатура"],"t-calm":["calmMode","Спокойный счёт"]};
+  const T={"t-sound":["sound","Звук"],"t-haptics":["haptics","Вибрация"],"t-auto":["autoAdvance","Авто-переход"],"t-anim":["noanim","Без анимаций"],"t-pad":["forcePad","Экранная клавиатура"],"t-calm":["calmMode","Спокойный счёт"],"t-selfexplain":["selfExplain","Саморефлексия при ошибке"],"t-estimate":["estimateFirst","Прикидка перед ответом"]};
   Object.keys(T).forEach(id=>{const el=$("#"+id);if(!el)return;const on=!!S.settings[T[id][0]];el.classList.toggle("on",on);el.setAttribute("role","switch");el.setAttribute("aria-checked",on?"true":"false");el.setAttribute("aria-label",T[id][1]);});
   const seg=$("#teach-seg");if(seg){seg.setAttribute("role","radiogroup");seg.setAttribute("aria-label","При ошибке");}
   $$("#teach-seg button").forEach(b=>{const on=b.dataset.tm===(S.settings.teachMode||"interactive");b.classList.toggle("on",on);b.setAttribute("role","radio");b.setAttribute("aria-checked",on?"true":"false");});
+  const cseg=$("#conf-seg");if(cseg){cseg.setAttribute("role","radiogroup");cseg.setAttribute("aria-label","Спрашивать уверенность");}
+  $$("#conf-seg button").forEach(b=>{const on=b.dataset.cf===(S.settings.confidence||"off");b.classList.toggle("on",on);b.setAttribute("role","radio");b.setAttribute("aria-checked",on?"true":"false");});
+  const gset=goalCfg();
+  const gsg=$("#goal-seg");if(gsg){gsg.setAttribute("role","radiogroup");gsg.setAttribute("aria-label","Цель дня");}
+  $$("#goal-seg button").forEach(b=>{const on=b.dataset.g===gset.type;b.classList.toggle("on",on);b.setAttribute("role","radio");b.setAttribute("aria-checked",on?"true":"false");});
+  const gAmtRow=$("#goal-amount-row");if(gAmtRow)gAmtRow.style.display=(gset.type==="off")?"none":"";
+  const gAmt=$("#goal-amount");if(gAmt)gAmt.value=gset.amount||50;
   const sw=$("#swatches");sw.innerHTML="";sw.setAttribute("role","radiogroup");sw.setAttribute("aria-label","Цвет акцента");
   const NM=["Фиолетовый","Зелёный","Оранжевый","Голубой","Розовый"];
   ACCENTS.forEach((c,i)=>{const on=i===S.settings.accent;sw.insertAdjacentHTML("beforeend",
@@ -1239,7 +1694,12 @@ $("#t-auto").addEventListener("click",()=>{S.settings.autoAdvance=!S.settings.au
 $("#t-anim").addEventListener("click",()=>{S.settings.noanim=!S.settings.noanim;save();syncSettings();applyAnim();});
 $("#t-pad").addEventListener("click",()=>{S.settings.forcePad=!S.settings.forcePad;save();syncSettings();});
 $("#teach-seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.settings.teachMode=b.dataset.tm;save();syncSettings();});
+$("#conf-seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.settings.confidence=b.dataset.cf;save();syncSettings();});
 $("#t-calm").addEventListener("click",()=>{S.settings.calmMode=!S.settings.calmMode;save();syncSettings();});
+$("#t-selfexplain").addEventListener("click",()=>{S.settings.selfExplain=!S.settings.selfExplain;save();syncSettings();});
+$("#t-estimate").addEventListener("click",()=>{S.settings.estimateFirst=!S.settings.estimateFirst;save();syncSettings();});
+$("#goal-seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(!S.settings.goal)S.settings.goal={type:"off",amount:50};const prev=S.settings.goal.type;S.settings.goal.type=b.dataset.g;if(b.dataset.g!=="off"&&b.dataset.g!==prev){const def={problems:50,sessions:1,minutes:5};S.settings.goal.amount=def[b.dataset.g]||1;}save();syncSettings();renderGoal();});
+$("#goal-amount").addEventListener("change",e=>{if(!S.settings.goal)S.settings.goal={type:"problems",amount:50};S.settings.goal.amount=clamp(parseInt(e.target.value)||1,1,100000);save();syncSettings();renderGoal();});
 $("#swatches").addEventListener("click",e=>{const b=e.target.closest(".swatch");if(!b)return;S.settings.accent=+b.dataset.i;save();applyAccent();syncSettings();});
 
 $("#export-btn").addEventListener("click",()=>{
@@ -1320,7 +1780,9 @@ window.MICONS={
   'flame':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5s4.5 3.5 4.5 8.5a4.5 4.5 0 0 1-9 0c0-1.4.6-2.6 1.4-3.5C9.5 9 10 7.6 10 7.6s.8 1 1.2 2.1C11.7 8 12 6 12 2.5Z"/></svg>',
   'trophy':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 17 4 17 9a5 5 0 0 1-10 0Z"/><path d="M7 5 4 5 4 7a3 3 0 0 0 3 3"/><path d="M17 5 20 5 20 7a3 3 0 0 1-3 3"/><path d="M12 14 12 17"/><path d="M9.5 20 14.5 20 13.8 17 10.2 17Z"/></svg>'
 };
-window.MICONMAP={numspan:'numberline',nback:'layers',schulte:'grid',anzan:'zap',stroop:'eye',tech:'sparkles',percents:'percent',roots:'radical',ninecheck:'badgecheck',mistakes:'rotateccw',facts:'timer',mastery:'map',mhmap:'table',session:'calendarcheck'};
+window.MICONS['numline']='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="15" x2="21" y2="15"/><line x1="6" y1="13" x2="6" y2="17"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="18" y1="13" x2="18" y2="17"/><circle cx="13.5" cy="15" r="2.6" fill="currentColor" stroke="none"/></svg>';
+window.MICONS['shuffle']='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h4l10 12h4"/><path d="M3 18h4l3-3.6"/><path d="M14 7.6 17 6h4"/><path d="M18 3l3 3-3 3"/><path d="M18 15l3 3-3 3"/></svg>';
+window.MICONMAP={numspan:'numberline',nback:'layers',schulte:'grid',anzan:'zap',stroop:'eye',tech:'sparkles',percents:'percent',roots:'radical',ninecheck:'badgecheck',mistakes:'rotateccw',facts:'timer',mastery:'map',mhmap:'table',session:'calendarcheck',numline:'numline',exam:'badgecheck',mix:'shuffle'};
 window.MICO=function(id){return (window.MICONMAP[id]&&window.MICONS[window.MICONMAP[id]])||'';};
 
 function renderHomeModules(){
@@ -1380,6 +1842,7 @@ window.Mentis={
   onLeave:function(fn){document.addEventListener("mentis:leave",fn);},
   onHome:function(fn){MENTIS_HOME_HOOKS.push(fn);try{fn();}catch(e){}},
   genProblem:function(op){return genProblem(op);},
+  genProblemAt:function(op,lvl){return genProblemAt(op,lvl);},
   rate:function(op,correct,rt){try{updateRating(op,correct,rt);}catch(e){}},
   OPS:OPS,
   opNames:OP_NAMES
@@ -1396,7 +1859,7 @@ function applyTheme(){
   if(b&&window.MICONS)b.innerHTML=light?MICONS.moon:MICONS.sun;
 }
 $("#theme-btn").addEventListener("click",()=>{S.settings.theme=S.settings.theme==="light"?"dark":"light";save();applyTheme();});
-function bootUI(){applyAccent();applyTheme();applyAnim();syncHome();syncSettings();renderBest();renderHomeModules();}
+function bootUI(){applyAccent();applyTheme();applyAnim();syncHome();syncSettings();renderBest();renderHomeModules();renderGoal();}
 bootUI();
 go("home");
 </script>
@@ -3358,7 +3821,7 @@ go("home");
         + '<div class="ex-stat"><div class="v tnum">'+S.maxCount+'</div><div class="k">макс. чисел</div></div>'
         + '<div class="ex-stat"><div class="v tnum">'+S.maxDigits+'</div><div class="k">макс. разряд</div></div>'
       + '</div>'
-      + '<p class="lead">Сессия завершена. Удерживать растущую сумму в уме — тренировка рабочей памяти.</p>'
+      + '<p class="lead">Сессия завершена. Удерживать растущую сумму в уме — это и есть ментальный счёт: с практикой быстрее становится именно он. Широкого переноса на «общую» память или интеллект ждать не стоит — и мы его не обещаем.</p>'
       + '<div class="ex-row">'
         + '<button class="btn ghost" id="anzan-home" type="button">В меню</button>'
         + '<button class="btn" id="anzan-again" type="button">Ещё раз</button>'
@@ -3377,6 +3840,661 @@ go("home");
     unit: "оч",
     start: start
   });
+})();
+</script>
+<!-- module: numline (spatial magnitude) -->
+<style id="mentis-numline-css">
+#nl-stage{width:100%;max-width:460px;margin:4px auto 0}
+#nl-svg{width:100%;height:auto;display:block;touch-action:none;cursor:pointer}
+#nl-svg .nl-base{stroke:var(--line-strong);stroke-width:2.5;stroke-linecap:round}
+#nl-svg .nl-tick{stroke:var(--line-strong);stroke-width:2}
+#nl-svg .nl-lab{fill:var(--muted);font-family:var(--font-mono);font-size:12px;font-variant-numeric:tabular-nums}
+#nl-svg .nl-stem{stroke:var(--accent);stroke-width:2.5;stroke-linecap:round}
+#nl-svg .nl-knob{fill:var(--accent);stroke:var(--bg);stroke-width:2.5}
+#nl-svg .nl-true-stem{stroke:var(--good);stroke-width:2.5;stroke-dasharray:3 4;stroke-linecap:round}
+#nl-svg .nl-true-knob{fill:var(--good)}
+#nl-svg .nl-target{fill:var(--text);font-family:var(--font-mono);font-weight:800;font-size:22px;text-anchor:middle}
+#nl-svg .nl-band{fill:var(--accent-soft)}
+.nl-readout{text-align:center;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:1.05rem;color:var(--muted);min-height:1.4em;margin-top:6px}
+.nl-readout b{color:var(--text);font-weight:700}
+.nl-modeseg{margin:0 auto}
+</style>
+<script>
+(function(){
+  "use strict";
+  var M = window.Mentis; if(!M) return;
+  var U = M.util, ID = "numline";
+  var VB_W = 360, VB_H = 96, PAD = 30, BASE_Y = 60, TROUNDS = 12;
+  var mode = "place", lvl = 1, round = 0, accSum = 0, withinN = 0, results = [];
+  var cur = null, phase = "idle";
+
+  M.onLeave(function(){ phase = "idle"; });
+
+  function fmt(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
+  function stageOf(l){ var s = Math.floor((l - 1) / 2); return s < 0 ? 0 : (s > 3 ? 3 : s); }
+  function maxFor(l){ return [100, 1000, 10000, 100000][stageOf(l)]; }
+  function tolFor(l){ var t = 0.10 - 0.008 * l; return t < 0.03 ? 0.03 : (t > 0.10 ? 0.10 : t); }
+  function xOf(v, max){ return PAD + (v / max) * (VB_W - 2 * PAD); }
+  function vOf(x, max){ var f = (x - PAD) / (VB_W - 2 * PAD); f = f < 0 ? 0 : (f > 1 ? 1 : f); return f * max; }
+
+  function start(){
+    mode = "place"; lvl = 1; round = 0; accSum = 0; withinN = 0; results = [];
+    intro(M.openScreen(ID, "Числовая прямая"));
+  }
+
+  function intro(body){
+    var st = null; try{ st = M.stat(ID); }catch(e){}
+    var best = (st && st.best != null) ? ('Лучшая точность: <b class="tnum">' + st.best + '%</b>') : "Ещё не пройдено";
+    body.innerHTML =
+      '<div class="ex-wrap">' +
+        '<p class="lead">Где живёт число на прямой? В режиме <b>«Размести»</b> перетащи метку туда, где, по-твоему, стоит число; в <b>«Назови»</b> — определи, какое число под меткой. Это тренирует <b>чувство величины</b> — линейное внутреннее представление чисел, на котором стоит вся арифметика. Сложность растёт сама.</p>' +
+        '<div class="ex-row"><div class="seg sm nl-modeseg" id="nl-mode"><button data-m="place" class="on" type="button">Размести</button><button data-m="estimate" type="button">Назови</button></div></div>' +
+        '<div class="ex-sub">' + best + '</div>' +
+        '<button class="btn" id="nl-start" type="button">Старт</button>' +
+      '</div>';
+    body.querySelector("#nl-mode").addEventListener("click", function(e){
+      var b = e.target.closest("button"); if(!b) return; mode = b.dataset.m;
+      [].slice.call(e.currentTarget.children).forEach(function(x){ x.classList.toggle("on", x === b); });
+    });
+    body.querySelector("#nl-start").addEventListener("click", function(){ round = 0; accSum = 0; withinN = 0; results = []; lvl = 1; nextRound(body); });
+  }
+
+  function pills(){
+    return '<div class="ex-pills"><div class="ex-pill">раунд <b class="accent tnum">' + (round + 1) + '</b>/' + TROUNDS + '</div>' +
+      '<div class="ex-pill">' + (mode === "place" ? "размести" : "назови") + '</div>' +
+      '<div class="ex-pill">0…<b class="tnum">' + fmt(maxFor(lvl)) + '</b></div></div>';
+  }
+
+  function axisSVG(max, extra){
+    var x0 = PAD, x1 = VB_W - PAD;
+    return '<line class="nl-base" x1="' + x0 + '" y1="' + BASE_Y + '" x2="' + x1 + '" y2="' + BASE_Y + '"/>' +
+      '<line class="nl-tick" x1="' + x0 + '" y1="' + (BASE_Y - 7) + '" x2="' + x0 + '" y2="' + (BASE_Y + 7) + '"/>' +
+      '<line class="nl-tick" x1="' + x1 + '" y1="' + (BASE_Y - 7) + '" x2="' + x1 + '" y2="' + (BASE_Y + 7) + '"/>' +
+      '<text class="nl-lab" x="' + x0 + '" y="' + (BASE_Y + 24) + '" text-anchor="start">0</text>' +
+      '<text class="nl-lab" x="' + x1 + '" y="' + (BASE_Y + 24) + '" text-anchor="end">' + fmt(max) + '</text>' +
+      (extra || "");
+  }
+
+  function nextRound(body){
+    if(round >= TROUNDS){ finish(body); return; }
+    var max = maxFor(lvl);
+    var target = Math.max(1, Math.min(max - 1, Math.round((0.04 + Math.random() * 0.92) * max)));
+    cur = { max: max, target: target, tol: tolFor(lvl) };
+    phase = "answer";
+    if(mode === "place") roundPlace(body); else roundEstimate(body);
+  }
+
+  // ---- PLACE: drag a marker to where the target number belongs ----
+  function roundPlace(body){
+    var max = cur.max;
+    var handleV = max / 2; // start at center
+    body.innerHTML =
+      '<div class="ex-wrap">' + pills() +
+        '<div id="nl-stage"><svg id="nl-svg" viewBox="0 0 ' + VB_W + ' ' + VB_H + '" role="img" aria-label="Числовая прямая">' +
+          '<text class="nl-target" x="' + (VB_W / 2) + '" y="26">' + fmt(cur.target) + '</text>' +
+          axisSVG(max,
+            '<line class="nl-stem" id="nl-stem" x1="0" y1="' + (BASE_Y - 16) + '" x2="0" y2="' + (BASE_Y + 4) + '"/>' +
+            '<circle class="nl-knob" id="nl-knob" cx="0" cy="' + (BASE_Y - 16) + '" r="8"/>') +
+        '</svg></div>' +
+        '<div class="nl-readout" id="nl-read">перетащи метку · сейчас ≈ <b>' + fmt(handleV) + '</b></div>' +
+        '<div class="ex-msg" id="nl-msg" role="status" aria-live="polite"></div>' +
+        '<button class="btn" id="nl-ok" type="button">Поставить ⏎</button>' +
+      '</div>';
+    var svg = body.querySelector("#nl-svg");
+    var knob = body.querySelector("#nl-knob");
+    var stem = body.querySelector("#nl-stem");
+    var read = body.querySelector("#nl-read");
+    function place(v){
+      handleV = v;
+      var x = xOf(v, max);
+      knob.setAttribute("cx", x); stem.setAttribute("x1", x); stem.setAttribute("x2", x);
+      read.innerHTML = 'сейчас ≈ <b>' + fmt(v) + '</b>';
+    }
+    place(handleV);
+    var dragging = false;
+    function clientToV(clientX){
+      var r = svg.getBoundingClientRect();
+      var xs = (clientX - r.left) / r.width * VB_W;
+      return vOf(xs, max);
+    }
+    svg.addEventListener("pointerdown", function(e){ if(phase !== "answer") return; dragging = true; try{ svg.setPointerCapture(e.pointerId); }catch(_){} place(clientToV(e.clientX)); e.preventDefault(); });
+    svg.addEventListener("pointermove", function(e){ if(!dragging || phase !== "answer") return; place(clientToV(e.clientX)); });
+    svg.addEventListener("pointerup", function(e){ dragging = false; try{ svg.releasePointerCapture(e.pointerId); }catch(_){} });
+    svg.addEventListener("pointercancel", function(){ dragging = false; });
+    function submit(){
+      if(phase !== "answer") return;
+      phase = "judge";
+      judgePlace(body, handleV);
+    }
+    var ok = body.querySelector("#nl-ok");
+    ok.addEventListener("click", submit);
+    document.addEventListener("keydown", keyOnce);
+    function keyOnce(e){ if(e.key === "Enter" && phase === "answer"){ e.preventDefault(); submit(); } }
+    cleanupKey = function(){ document.removeEventListener("keydown", keyOnce); };
+  }
+
+  function judgePlace(body, placedV){
+    cleanup();
+    var max = cur.max, target = cur.target;
+    var err = Math.abs(placedV - target);
+    var errFrac = err / max;
+    var within = errFrac <= cur.tol;
+    var acc = Math.max(0, Math.round(100 * (1 - errFrac)));
+    record(acc, within);
+    // redraw with true marker + band
+    var svg = body.querySelector("#nl-svg");
+    if(svg){
+      var tx = xOf(target, max), tolW = cur.tol * (VB_W - 2 * PAD);
+      var band = '<rect class="nl-band" x="' + (tx - tolW) + '" y="' + (BASE_Y - 6) + '" width="' + (2 * tolW) + '" height="12" rx="3"/>';
+      var trueMark = '<line class="nl-true-stem" x1="' + tx + '" y1="' + (BASE_Y - 18) + '" x2="' + tx + '" y2="' + (BASE_Y + 4) + '"/>' +
+        '<circle class="nl-true-knob" cx="' + tx + '" cy="' + (BASE_Y - 18) + '" r="6"/>';
+      // keep existing knob (placed) on top; rebuild svg innerHTML preserving placed pos
+      var px = xOf(placedV, max);
+      svg.innerHTML = '<text class="nl-target" x="' + (VB_W / 2) + '" y="26">' + fmt(target) + '</text>' +
+        band + axisSVG(max, trueMark +
+          '<line class="nl-stem" x1="' + px + '" y1="' + (BASE_Y - 16) + '" x2="' + px + '" y2="' + (BASE_Y + 4) + '"/>' +
+          '<circle class="nl-knob" cx="' + px + '" cy="' + (BASE_Y - 16) + '" r="8"/>');
+    }
+    var msg = body.querySelector("#nl-msg");
+    if(msg){
+      msg.className = "ex-msg show " + (within ? "ok" : "no");
+      msg.innerHTML = (within ? "✓ " : "✕ ") + "точность <b>" + acc + "%</b> · верное место: <span class=\"tnum\">" + fmt(target) + "</span>";
+    }
+    try{ if(within){ M.audio.ok(); M.audio.vibe(35); } else { M.audio.no(); M.audio.vibe([30,40,30]); } }catch(e){}
+    swapToNext(body);
+  }
+
+  // ---- ESTIMATE: a marker is shown; read its value ----
+  function roundEstimate(body){
+    var max = cur.max;
+    var px = xOf(cur.target, max);
+    body.innerHTML =
+      '<div class="ex-wrap">' + pills() +
+        '<div id="nl-stage"><svg id="nl-svg" viewBox="0 0 ' + VB_W + ' ' + VB_H + '" role="img" aria-label="Числовая прямая с меткой">' +
+          axisSVG(max,
+            '<line class="nl-stem" x1="' + px + '" y1="' + (BASE_Y - 18) + '" x2="' + px + '" y2="' + (BASE_Y + 4) + '"/>' +
+            '<circle class="nl-knob" cx="' + px + '" cy="' + (BASE_Y - 18) + '" r="8"/>') +
+        '</svg></div>' +
+        '<input class="ex-input tnum" id="nl-in" inputmode="numeric" autocomplete="off" placeholder="?" aria-label="Какое это число">' +
+        '<div class="ex-msg" id="nl-msg" role="status" aria-live="polite"></div>' +
+        '<button class="btn" id="nl-ok" type="button">Проверить ⏎</button>' +
+      '</div>';
+    var inp = body.querySelector("#nl-in");
+    try{ inp.focus(); }catch(e){}
+    function submit(){
+      if(phase !== "answer") return;
+      var raw = inp.value.replace(/[^\d]/g, "");
+      if(raw === "") return;
+      phase = "judge";
+      judgeEstimate(body, parseInt(raw, 10));
+    }
+    body.querySelector("#nl-ok").addEventListener("click", submit);
+    inp.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); submit(); } });
+  }
+
+  function judgeEstimate(body, guess){
+    var max = cur.max, target = cur.target;
+    var err = Math.abs(guess - target), errFrac = err / max;
+    var within = errFrac <= cur.tol;
+    var acc = Math.max(0, Math.round(100 * (1 - errFrac)));
+    record(acc, within);
+    var msg = body.querySelector("#nl-msg");
+    if(msg){
+      msg.className = "ex-msg show " + (within ? "ok" : "no");
+      msg.innerHTML = (within ? "✓ " : "✕ ") + "точность <b>" + acc + "%</b> · было <span class=\"tnum\">" + fmt(target) + "</span>";
+    }
+    var svg = body.querySelector("#nl-svg");
+    if(svg){
+      var tx = xOf(target, max), gx = xOf(Math.min(max, Math.max(0, guess)), max);
+      svg.innerHTML = axisSVG(max,
+        '<line class="nl-true-stem" x1="' + tx + '" y1="' + (BASE_Y - 18) + '" x2="' + tx + '" y2="' + (BASE_Y + 4) + '"/>' +
+        '<circle class="nl-true-knob" cx="' + tx + '" cy="' + (BASE_Y - 18) + '" r="6"/>' +
+        '<line class="nl-stem" x1="' + gx + '" y1="' + (BASE_Y - 16) + '" x2="' + gx + '" y2="' + (BASE_Y + 4) + '"/>' +
+        '<circle class="nl-knob" cx="' + gx + '" cy="' + (BASE_Y - 16) + '" r="8"/>');
+    }
+    try{ if(within){ M.audio.ok(); M.audio.vibe(35); } else { M.audio.no(); M.audio.vibe([30,40,30]); } }catch(e){}
+    swapToNext(body);
+  }
+
+  var cleanupKey = null;
+  function cleanup(){ if(cleanupKey){ try{ cleanupKey(); }catch(e){} cleanupKey = null; } }
+
+  function record(acc, within){
+    accSum += acc; if(within) withinN++;
+    results.push({ acc: acc, within: within });
+    // adaptive: hold the challenge near the edge of ability
+    lvl = within ? Math.min(8, lvl + 0.5) : Math.max(1, lvl - 0.8);
+  }
+
+  function swapToNext(body){
+    cleanup();
+    var advanced = false;
+    function advance(){ if(advanced) return; advanced = true; cleanup(); round++; phase = "answer"; nextRound(body); }
+    var ok = body.querySelector("#nl-ok");
+    if(ok){
+      var nb = ok.cloneNode(false);
+      nb.textContent = (round + 1 >= TROUNDS) ? "Итог →" : "Далее →";
+      ok.parentNode.replaceChild(nb, ok);
+      nb.addEventListener("click", advance);
+      try{ nb.focus(); }catch(e){}
+    }
+    var inp = body.querySelector("#nl-in");
+    if(inp){ inp.readOnly = true; }
+    var go = function(e){ if(e.key === "Enter"){ e.preventDefault(); advance(); } };
+    document.addEventListener("keydown", go);
+    cleanupKey = function(){ document.removeEventListener("keydown", go); };
+  }
+
+  function finish(body){
+    cleanup();
+    phase = "done";
+    var meanAcc = results.length ? Math.round(accSum / results.length) : 0;
+    try{ M.recordResult(ID, { score: meanAcc, higherIsBetter: true, mode: mode, within: withinN }); }catch(e){}
+    var st = null; try{ st = M.stat(ID); }catch(e){}
+    body.innerHTML =
+      '<div class="ex-wrap"><div class="ex-stat-row">' +
+        '<div class="ex-stat"><div class="v tnum">' + meanAcc + '%</div><div class="k">точность</div></div>' +
+        '<div class="ex-stat"><div class="v tnum">' + ((st && st.best) || meanAcc) + '%</div><div class="k">рекорд</div></div>' +
+        '<div class="ex-stat"><div class="v tnum">' + withinN + '/' + TROUNDS + '</div><div class="k">в допуске</div></div>' +
+      '</div>' +
+      '<p class="lead">Чувство величины — один из немногих «тренируемых» навыков с подтверждённым переносом на счёт: чем ровнее твоя внутренняя числовая прямая, тем устойчивее прикидка и арифметика. Несколько коротких заходов в неделю заметно её выправляют.</p>' +
+      '<div class="ex-row"><button class="btn ghost" id="nl-menu" type="button">В меню</button><button class="btn" id="nl-again" type="button">Ещё раз</button></div></div>';
+    body.querySelector("#nl-menu").addEventListener("click", function(){ M.home(); });
+    body.querySelector("#nl-again").addEventListener("click", function(){ start(); });
+  }
+
+  try{
+    M.registerModule({ id: ID, group: "sense", icon: "—", title: "Числовая прямая", subtitle: "Размести число на прямой — чувство величины (перенос на счёт)", unit: "%", start: start });
+  }catch(e){}
+})();
+</script>
+<!-- module: exam (cumulative checkpoint — testing effect + spacing) -->
+<style id="mentis-exam-css">
+.exam-delta{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:.86rem}
+.exam-delta.up{color:var(--good)} .exam-delta.down{color:var(--bad)} .exam-delta.flat{color:var(--muted)}
+.exam-decay{margin-top:6px;background:var(--bad-soft);border-radius:var(--radius-sm);padding:12px 14px}
+.exam-decay-h{font-weight:700;font-size:.92rem;color:var(--bad);margin-bottom:6px}
+.exam-decay-list{display:flex;flex-wrap:wrap;gap:6px}
+.exam-chip{font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:.86rem;background:var(--s2);border:1px solid var(--line);border-radius:var(--radius-pill);padding:3px 10px;color:var(--text)}
+.exam-cats{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.exam-cat{display:grid;grid-template-columns:96px 1fr 56px;align-items:center;gap:10px}
+.exam-cat .k{font-size:.86rem;color:var(--muted)}
+.exam-cat .track{height:8px;border-radius:99px;background:var(--s3);overflow:hidden}
+.exam-cat .track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.exam-cat .v{font-size:.82rem;font-weight:700;text-align:right;color:var(--text);font-variant-numeric:tabular-nums}
+.exam-progress{height:6px;border-radius:99px;background:var(--s2);overflow:hidden;margin:2px auto 8px;width:min(420px,90vw)}
+.exam-progress i{display:block;height:100%;background:var(--accent);transition:width .25s}
+</style>
+<script>
+(function(){
+  "use strict";
+  var M = window.Mentis; if(!M) return;
+  var U = M.util, ID = "exam", DAY = 86400000;
+  var N_FACTS = 12, N_ARITH = 12, WEEK = 7 * DAY;
+  var OPS = { add:"+", sub:"−", mul:"×", div:"÷" };
+  var timers = [];
+  function clearTimers(){ try{ timers.forEach(function(t){ clearTimeout(t); }); }catch(e){} timers = []; }
+  M.onLeave(function(){ clearTimers(); });
+
+  function exams(){ var S = M.getState(); if(!Array.isArray(S.exams)) S.exams = []; return S.exams; }
+  function last(){ var e = exams(); return e.length ? e[e.length-1] : null; }
+  function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+
+  // ---- home CTA (premium, mirrors Сеанс дня) ----
+  M.onHome(function(){
+    try{
+      var host = U.$("#home-exam"); if(!host) return;
+      var l = last();
+      var since = l ? (Date.now() - l.ts) / DAY : Infinity;
+      var ready = since >= 7;
+      if(l && !ready){ host.innerHTML = ""; return; } // recently done → keep home uncluttered (tile still available)
+      var ic = (window.MICONS && MICONS.badgecheck) || "";
+      var title, sub, btn;
+      if(!l){ title = "Контрольная"; sub = "Смешанная проверка без подсказок — рентген того, что реально закрепилось."; btn = "Пройти"; }
+      else { title = "Контрольная недели"; sub = "Прошло <b>" + Math.round(since) + "</b> дн. — самое время проверить, что осталось в памяти."; btn = "Пройти"; }
+      host.innerHTML =
+        '<div class="ses-cta">' +
+          '<div class="ses-cta-ic">' + ic + '</div>' +
+          '<div class="ses-cta-body"><div class="ses-cta-title">' + title + '</div><div class="ses-cta-sub">' + sub + '</div></div>' +
+          '<button class="btn ses-cta-btn" id="exam-go" type="button">' + btn + '</button>' +
+        '</div>';
+      var b = host.querySelector("#exam-go");
+      if(b) b.addEventListener("click", function(){ try{ M.audio.ensure(); }catch(e){} start(); });
+    }catch(e){}
+  });
+
+  function start(){ clearTimers(); intro(M.openScreen(ID, "Контрольная")); }
+
+  function intro(body){
+    clearTimers();
+    var l = last();
+    var lastLine = l
+      ? 'Прошлая: <b class="tnum">' + l.correct + '/' + l.total + '</b> (' + Math.round(l.acc*100) + '%), медиана <b class="tnum">' + (l.medRt/1000).toFixed(1) + 'с</b>.'
+      : 'Ещё не проходил.';
+    body.innerHTML =
+      '<div class="ex-wrap">' +
+        '<p class="lead">Смешанный набор из того, что ты уже учил — факты и арифметика вперемешку, <b>без подсказок и разбора по ходу</b>. Это не оценка, а проверка: что закрепилось, а что незаметно <b>просело</b>. Сильнейшая связка доказанных приёмов — <b>припоминание под контроль</b> + <b>интервалы</b>: один такой заход в неделю держит навык честно.</p>' +
+        '<div class="ex-sub">' + lastLine + '</div>' +
+        '<button class="btn" id="exam-start" type="button">Начать контрольную</button>' +
+        '<button class="btn ghost" id="exam-menu" type="button">В меню</button>' +
+      '</div>';
+    body.querySelector("#exam-start").addEventListener("click", function(){ run(body); });
+    body.querySelector("#exam-menu").addEventListener("click", function(){ M.home(); });
+  }
+
+  // ---- compose a mixed set: decayed-weighted facts + arithmetic across ops ----
+  function compose(){
+    var items = [];
+    // facts (integer-answer kinds only), weighted toward most-decayed
+    try{
+      var cards = (window.MentisFacts && window.MentisFacts.allCards) ? window.MentisFacts.allCards() : [];
+      if(cards.length){
+        cards = cards.filter(function(c){ return c.touched && c.kind !== "fracpct"; });
+        cards.sort(function(a,b){ var ra = a.retention==null?0:a.retention, rb = b.retention==null?0:b.retention; return ra - rb; });
+        var pick = cards.slice(0, Math.ceil(N_FACTS*0.65));      // most decayed
+        var rest = cards.slice(Math.ceil(N_FACTS*0.65));
+        shuffle(rest);
+        pick = pick.concat(rest.slice(0, N_FACTS - pick.length)); // + a random spread
+        pick.forEach(function(c){ items.push({ kind:"fact", id:c.id, q:c.q, ans:c.ans, wasMature:c.mature }); });
+      }
+    }catch(e){}
+    // arithmetic across all four operations at the user's current level
+    try{
+      var S = M.getState(), ratings = S.ratings || {}, ops = ["add","sub","mul","div"];
+      var per = Math.max(2, Math.round(N_ARITH / ops.length));
+      ops.forEach(function(op){
+        for(var i=0;i<per;i++){
+          var p = M.genProblemAt(op, ratings[op] || 3);
+          if(p) items.push({ kind:"arith", op:p.op, a:p.a, b:p.b, q:p.a + " " + (OPS[p.op]||p.sym) + " " + p.b, ans:p.ans });
+        }
+      });
+    }catch(e){}
+    return shuffle(items);
+  }
+
+  // ---- run ----
+  function run(body){
+    clearTimers();
+    var queue = compose();
+    var total = queue.length;
+    if(!total){ intro(body); return; }
+    var idx = 0, correct = 0, rts = [], decayed = [], missed = [];
+    var byCat = { fact:{c:0,n:0}, add:{c:0,n:0}, sub:{c:0,n:0}, mul:{c:0,n:0}, div:{c:0,n:0} };
+
+    function step(){
+      if(idx >= total){ finish(); return; }
+      var it = queue[idx], t0 = Date.now();
+      body.innerHTML =
+        '<div class="ex-wrap">' +
+          '<div class="exam-progress"><i style="width:' + Math.round(idx/total*100) + '%"></i></div>' +
+          '<div class="ex-pills"><div class="ex-pill">вопрос <b class="accent tnum">' + (idx+1) + '</b>/' + total + '</div>' +
+            '<div class="ex-pill">верно <b class="tnum">' + correct + '</b></div></div>' +
+          '<div class="ex-display tnum" id="exam-q">' + it.q + '</div>' +
+          '<input class="ex-input tnum" id="exam-in" inputmode="decimal" autocomplete="off" placeholder="?" aria-label="Ответ">' +
+          '<div class="ex-msg" id="exam-msg" role="status" aria-live="polite"></div>' +
+          '<button class="btn" id="exam-ok" type="button">Ответ ⏎</button>' +
+        '</div>';
+      var inp = body.querySelector("#exam-in"), msg = body.querySelector("#exam-msg"), ok = body.querySelector("#exam-ok");
+      var answered = false;
+      try{ inp.focus(); }catch(e){}
+      function submit(){
+        if(answered) return;
+        var raw = inp.value.replace(/[^0-9.,\-]/g, "").replace(",", ".");
+        if(raw === "" || raw === "-" || raw === "." ){ return; }
+        var val = Number(raw); if(!isFinite(val)) return;
+        answered = true;
+        var rt = Date.now() - t0;
+        var isOk = Math.abs(val - it.ans) < 0.001;
+        rts.push(rt);
+        if(it.kind === "fact"){
+          byCat.fact.n++; if(isOk) byCat.fact.c++;
+          try{ if(window.MentisFacts) window.MentisFacts.gradeFromAnswer(it.id, isOk, rt); }catch(e){} // decayed facts get rescheduled
+          if(!isOk){ missed.push({ a:fOperandA(it), op:"mul", b:fOperandB(it), label:it.q, ans:it.ans }); if(it.wasMature) decayed.push(it.q.replace(/\s/g,"")); }
+        } else {
+          byCat[it.op].n++; if(isOk) byCat[it.op].c++;
+          if(!isOk){
+            missed.push({ a:it.a, op:it.op, b:it.b, label:it.q, ans:it.ans });
+            try{ if(window.MentisMistakes) window.MentisMistakes.log({ a:it.a, op:it.op, b:it.b, answer:it.ans, given:String(val), context:"exam" }); }catch(e){}
+          }
+        }
+        if(isOk){ correct++; msg.textContent = "✓"; msg.className = "ex-msg show ok"; }
+        else { msg.innerHTML = '✕ <span class="tnum">' + fmtAns(it.ans) + '</span>'; msg.className = "ex-msg show no"; }
+        try{ if(isOk){ M.audio.ok(); } else { M.audio.no(); } }catch(e){}
+        idx++;
+        timers.push(setTimeout(step, (function(){ try{ return M.noanim(); }catch(e){ return false; } })() ? 220 : 520));
+      }
+      ok.addEventListener("click", submit);
+      inp.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); submit(); } });
+    }
+
+    function finish(){
+      clearTimers();
+      var acc = total ? correct/total : 0;
+      var medRt = U.median(rts);
+      var prev = last();
+      var rec = { ts: Date.now(), total: total, correct: correct, acc: acc, medRt: medRt,
+        decayed: decayed.slice(0, 24),
+        byCat: { fact:byCat.fact, add:byCat.add, sub:byCat.sub, mul:byCat.mul, div:byCat.div } };
+      var arr = exams(); arr.push(rec); if(arr.length > 60) arr.splice(0, arr.length - 60);
+      try{ M.recordResult(ID, { score: correct, higherIsBetter: true }); }catch(e){}  // also persists
+      try{ M.save(); }catch(e){}
+
+      var deltaHtml = "";
+      if(prev){
+        var dAcc = Math.round((acc - prev.acc) * 100);
+        var cls = dAcc > 1 ? "up" : (dAcc < -1 ? "down" : "flat");
+        var arrow = dAcc > 1 ? "▲" : (dAcc < -1 ? "▼" : "•");
+        deltaHtml = '<span class="exam-delta ' + cls + '">' + arrow + ' ' + (dAcc>0?"+":"") + dAcc + '% к прошлой</span>';
+      }
+      var catRows = ["fact","add","sub","mul","div"].map(function(k){
+        var d = byCat[k]; if(!d.n) return "";
+        var lab = k==="fact"?"факты":{add:"сложение",sub:"вычитание",mul:"умножение",div:"деление"}[k];
+        var pc = Math.round(d.c/d.n*100);
+        return '<div class="exam-cat"><div class="k">' + lab + '</div><div class="track"><i style="width:' + pc + '%"></i></div><div class="v">' + d.c + '/' + d.n + '</div></div>';
+      }).join("");
+      var decayHtml = decayed.length
+        ? '<div class="exam-decay"><div class="exam-decay-h">Просело (думал, что знаешь):</div><div class="exam-decay-list">' +
+            decayed.map(function(q){ return '<span class="exam-chip">' + q + '</span>'; }).join("") +
+          '</div></div>'
+        : '';
+
+      body.innerHTML =
+        '<div class="ex-wrap">' +
+          '<div class="ex-stat-row">' +
+            '<div class="ex-stat"><div class="v tnum">' + correct + '/' + total + '</div><div class="k">верно</div></div>' +
+            '<div class="ex-stat"><div class="v tnum">' + Math.round(acc*100) + '%</div><div class="k">точность</div></div>' +
+            '<div class="ex-stat"><div class="v tnum">' + (medRt/1000).toFixed(1) + 'с</div><div class="k">медиана</div></div>' +
+          '</div>' +
+          (deltaHtml ? '<div style="text-align:center;margin:-4px 0 4px">' + deltaHtml + '</div>' : '') +
+          '<div class="exam-cats">' + catRows + '</div>' +
+          decayHtml +
+          '<p class="lead">Контрольная — не оценка, а рентген памяти. Просевшие факты уже вернулись в очередь повторов, так что в следующий раз всплывут раньше.</p>' +
+          '<div class="ex-row">' +
+            '<button class="btn ghost" id="exam-home" type="button">В меню</button>' +
+            (missed.length ? '<button class="btn" id="exam-review" type="button">Разобрать ошибки (' + missed.length + ')</button>' : '<button class="btn" id="exam-again" type="button">Ещё раз</button>') +
+          '</div>' +
+        '</div>';
+      var hm = body.querySelector("#exam-home"); if(hm) hm.addEventListener("click", function(){ M.home(); });
+      var ag = body.querySelector("#exam-again"); if(ag) ag.addEventListener("click", function(){ run(body); });
+      var rv = body.querySelector("#exam-review"); if(rv) rv.addEventListener("click", function(){ review(body, missed.slice()); });
+    }
+    step();
+  }
+
+  // ---- post-exam review (interactive teach over the missed items) ----
+  function review(body, list){
+    if(!list.length || !(window.MentisCoach && window.MentisTeach)){ start(); return; }
+    var i = 0;
+    function nextOne(){
+      if(i >= list.length){ start(); return; }
+      var m = list[i++];
+      var lesson = null;
+      try{ lesson = window.MentisCoach.explain(m.a, m.op, m.b); }catch(e){}
+      if(!lesson){ nextOne(); return; }
+      var done = false;
+      window.MentisTeach.open(lesson, { faded:"completion", allowPractice:false, onClose:function(){ if(done) return; done = true; nextOne(); } });
+    }
+    nextOne();
+  }
+
+  function fOperandA(it){ var m = String(it.q).match(/\d+/g); return m ? +m[0] : 0; }
+  function fOperandB(it){ var m = String(it.q).match(/\d+/g); return (m && m[1]!=null) ? +m[1] : (m?+m[0]:0); }
+  function fmtAns(n){ if(n == null) return "—"; return String(n).replace(".", ","); }
+
+  try{
+    M.registerModule({ id: ID, group: "sense", icon: "✓", title: "Контрольная", subtitle: "Смешанная проверка без подсказок — что реально закрепилось", unit: "верно", start: start });
+  }catch(e){}
+})();
+</script>
+<!-- module: mix (interleaved technique drill — block→mix) -->
+<script>
+(function(){
+  "use strict";
+  var M = window.Mentis; if(!M) return;
+  var U = M.util, ID = "mix", TROUNDS = 14, MIX_GATE = 1;
+  // beginner-friendly, easy-to-recognise methods to seed the pool before much is learned
+  var DEFAULT_POOL = ["mul11","add_round","sub_round","mul_half_scale","mul_nines","sq_end5"];
+  var timers = [];
+  function clearTimers(){ try{ timers.forEach(function(t){ clearTimeout(t); }); }catch(e){} timers = []; }
+  M.onLeave(function(){ clearTimers(); });
+
+  function methodOp(m){ if(/^add/.test(m))return "add"; if(/^sub/.test(m))return "sub"; if(/^div/.test(m))return "div"; return "mul"; }
+  function answerOf(p){ return p.op==="add"?p.a+p.b : p.op==="sub"?p.a-p.b : p.op==="mul"?p.a*p.b : Math.round(p.a/p.b); }
+
+  // pool = methods the user has actually been exposed to (block-first); topped up with
+  // a few easy defaults only if too little has been learned yet.
+  function pool(){
+    var learned = [];
+    try{ var ce = M.getState().coachExposure || {}; for(var k in ce){ if(ce.hasOwnProperty(k) && (ce[k]||0) >= MIX_GATE) learned.push(k); } }catch(e){}
+    var seeded = learned.length < 3;
+    var arr = learned.slice();
+    if(seeded){ DEFAULT_POOL.forEach(function(m){ if(arr.indexOf(m) < 0) arr.push(m); }); }
+    return { list: arr.slice(0, 9), seeded: seeded, learnedCount: learned.length };
+  }
+
+  function start(){ clearTimers(); intro(M.openScreen(ID, "Перемешка")); }
+
+  function intro(body){
+    clearTimers();
+    var p = pool();
+    var note = p.seeded
+      ? '<div class="ex-sub">Освоишь больше приёмов в «Приёмы счёта» — перемешка станет богаче и полезнее.</div>'
+      : '<div class="ex-sub">В перемешке: <b>' + p.learnedCount + '</b> освоенных приёмов.</div>';
+    body.innerHTML =
+      '<div class="ex-wrap">' +
+        '<p class="lead">Задачи на разные приёмы идут <b>вперемешку</b>, так что каждый раз сначала надо <b>узнать, какой приём здесь нужен</b> — а уже потом считать. Это и есть главная польза интерливинга (доказан мета-анализом): отдельный приём блоком запоминается легче, но <b>вперемешку</b> ты учишься выбирать его на лету — как в реальном счёте. Будет <b>ощутимо труднее</b> блока — это нормально и работает на тебя.</p>' +
+        note +
+        '<button class="btn" id="mix-start" type="button">Поехали</button>' +
+        '<button class="btn ghost" id="mix-menu" type="button">В меню</button>' +
+      '</div>';
+    body.querySelector("#mix-start").addEventListener("click", function(){ run(body); });
+    body.querySelector("#mix-menu").addEventListener("click", function(){ M.home(); });
+  }
+
+  function run(body){
+    clearTimers();
+    var P = pool().list;
+    if(P.length < 2){ intro(body); return; }
+    var round = 0, correct = 0, rts = [], lastM = null, lastOp = null, missed = [], weak = {};
+
+    function pickMethod(){
+      // interleave: avoid repeating the same method, and prefer switching operation family
+      var cand = P.filter(function(m){ return m !== lastM; });
+      var diffOp = cand.filter(function(m){ return methodOp(m) !== lastOp; });
+      var src = diffOp.length ? diffOp : (cand.length ? cand : P);
+      return src[Math.floor(Math.random() * src.length)];
+    }
+
+    function step(){
+      if(round >= TROUNDS){ finish(); return; }
+      var method = pickMethod(), prob = null;
+      try{ prob = window.MentisCoach.sample(method); }catch(e){}
+      if(!prob){ round++; step(); return; }
+      lastM = method; lastOp = prob.op;
+      var ans = answerOf(prob), sym = ({add:"+",sub:"−",mul:"×",div:"÷"})[prob.op] || "·";
+      var t0 = Date.now();
+      body.innerHTML =
+        '<div class="ex-wrap">' +
+          '<div class="ex-pills"><div class="ex-pill">приём <b class="accent tnum">' + (round+1) + '</b>/' + TROUNDS + '</div>' +
+            '<div class="ex-pill">верно <b class="tnum">' + correct + '</b></div></div>' +
+          '<div class="ex-display tnum" id="mix-q">' + prob.a + ' ' + sym + ' ' + prob.b + '</div>' +
+          '<input class="ex-input tnum" id="mix-in" inputmode="numeric" autocomplete="off" placeholder="?" aria-label="Ответ">' +
+          '<div class="ex-msg" id="mix-msg" role="status" aria-live="polite"></div>' +
+          '<button class="btn" id="mix-ok" type="button">Ответ ⏎</button>' +
+        '</div>';
+      var inp = body.querySelector("#mix-in"), msg = body.querySelector("#mix-msg"), ok = body.querySelector("#mix-ok");
+      var answered = false;
+      try{ inp.focus(); }catch(e){}
+      function submit(){
+        if(answered) return;
+        var raw = inp.value.replace(/[^0-9\-]/g, "");
+        if(raw === "" || raw === "-") return;
+        answered = true;
+        var val = Number(raw), rt = Date.now() - t0, isOk = (val === ans);
+        rts.push(rt);
+        var title = "";
+        try{ var L = window.MentisCoach.explain(prob.a, prob.op, prob.b); title = (L && L.methodTitle) || ""; }catch(e){}
+        if(isOk){ correct++; msg.textContent = "✓"; msg.className = "ex-msg show ok"; try{ M.audio.ok(); }catch(e){} }
+        else {
+          msg.innerHTML = '✕ <span class="tnum">' + ans + '</span>' + (title ? ' · приём: <b>' + title + '</b>' : '');
+          msg.className = "ex-msg show no";
+          weak[method] = (weak[method]||0) + 1;
+          missed.push({ a:prob.a, op:prob.op, b:prob.b });
+          try{ M.audio.no(); }catch(e){}
+        }
+        round++;
+        timers.push(setTimeout(step, (function(){ try{ return M.noanim(); }catch(e){ return false; } })() ? 240 : (isOk ? 520 : 1100)));
+      }
+      ok.addEventListener("click", submit);
+      inp.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); submit(); } });
+    }
+
+    function finish(){
+      clearTimers();
+      var acc = TROUNDS ? correct/TROUNDS : 0, medRt = U.median(rts);
+      try{ M.recordResult(ID, { score: correct, higherIsBetter: true }); }catch(e){}
+      // weakest methods (by misses) → names
+      var weakNames = [];
+      try{
+        var entries = Object.keys(weak).map(function(m){ return { m:m, n:weak[m] }; }).sort(function(a,b){ return b.n - a.n; }).slice(0,3);
+        weakNames = entries.map(function(e){ var t=""; try{ var s=window.MentisCoach.sample(e.m); var L=window.MentisCoach.explain(s.a,s.op,s.b); t=(L&&L.methodTitle)||e.m; }catch(_){ t=e.m; } return t; });
+      }catch(e){}
+      var weakHtml = weakNames.length
+        ? '<p class="lead">Чаще спотыкался на: <b>' + weakNames.join("</b>, <b>") + '</b>. Прогони их блоком в «Приёмы счёта», потом снова сюда — на перемешку.</p>'
+        : '<p class="lead">Ровно по всем приёмам — узнаёшь нужный с ходу. Это и есть цель перемешки.</p>';
+      body.innerHTML =
+        '<div class="ex-wrap"><div class="ex-stat-row">' +
+          '<div class="ex-stat"><div class="v tnum">' + correct + '/' + TROUNDS + '</div><div class="k">верно</div></div>' +
+          '<div class="ex-stat"><div class="v tnum">' + Math.round(acc*100) + '%</div><div class="k">точность</div></div>' +
+          '<div class="ex-stat"><div class="v tnum">' + (medRt/1000).toFixed(1) + 'с</div><div class="k">медиана</div></div>' +
+        '</div>' + weakHtml +
+        '<div class="ex-row">' +
+          '<button class="btn ghost" id="mix-home" type="button">В меню</button>' +
+          (missed.length && window.MentisCoach && window.MentisTeach ? '<button class="btn" id="mix-review" type="button">Разобрать (' + missed.length + ')</button>' : '<button class="btn" id="mix-again" type="button">Ещё раз</button>') +
+        '</div></div>';
+      var hm = body.querySelector("#mix-home"); if(hm) hm.addEventListener("click", function(){ M.home(); });
+      var ag = body.querySelector("#mix-again"); if(ag) ag.addEventListener("click", function(){ run(body); });
+      var rv = body.querySelector("#mix-review"); if(rv) rv.addEventListener("click", function(){ reviewMiss(body, missed.slice()); });
+    }
+    step();
+  }
+
+  function reviewMiss(body, list){
+    var i = 0;
+    function nextOne(){
+      if(i >= list.length){ start(); return; }
+      var m = list[i++], lesson = null;
+      try{ lesson = window.MentisCoach.explain(m.a, m.op, m.b); }catch(e){}
+      if(!lesson){ nextOne(); return; }
+      var done = false;
+      window.MentisTeach.open(lesson, { faded:"completion", allowPractice:false, onClose:function(){ if(done) return; done = true; nextOne(); } });
+    }
+    nextOne();
+  }
+
+  try{
+    M.registerModule({ id: ID, group: "technique", icon: "⤬", title: "Перемешка", subtitle: "Приёмы вперемешку — узнавай, какой нужен (интерливинг)", unit: "верно", start: start });
+  }catch(e){}
 })();
 </script>
 <script>
@@ -7627,21 +8745,51 @@ go("home");
   if(!M) return;
   var ID = "facts";
 
-  // ---- SM-2 constants ----
-  var EF_START = 2.5, EF_FLOOR = 1.3, EF_MAX = 3.0;
-  var DAY = 86400000, RELEARN = 600000; // 10 min
+  // ---- FSRS-lite constants (DSR memory model; replaces SM-2 ease-factor) ----
+  // We model each card with Difficulty (1..10), Stability (days until R falls to
+  // TARGET_R) and Retrievability R(t)= (1 + FACTOR·t/S)^DECAY. Scheduling a card
+  // means: come due when predicted recall has decayed to TARGET_R, i.e. interval≈S.
+  // This kills SM-2 "ease hell" (difficulty mean-reverts) and reviews less for the
+  // same retention. Weights are FSRS-4.5-shaped, rounded for a hand-tuned engine.
+  var DAY = 86400000, RELEARN = 600000; // 10 min relearn step
   var SESSION_CAP = 30;
   var LEECH_LAPSES = 8; // lapses>=8 → leech
+  var TARGET_R = 0.90;                       // retention setpoint
+  var DECAY = -0.5;
+  var FACTOR = Math.pow(0.9, 1 / DECAY) - 1; // ≈0.2346 → interval == stability at R=0.9
+  // difficulty dynamics
+  var DIFF_STEP = 1.0, DIFF_MR = 0.05, DIFF_ANCHOR = 5;
+  // recall-stability growth (S' = S·(1 + inc))
+  var W8 = 1.26, W9 = 0.18, W10 = 2.0, W_HARD = 0.8, W_EASY = 1.3;
+  // post-lapse stability
+  var W_LAPSE = 2.0, W_LAPSE_D = 0.2, W_LAPSE_S = 0.3, W_LAPSE_R = 2.0;
+  var IMPLICIT_CAP = 3; // max implicit (composite) credits per card per day
+  var INIT_S = [0, 0.5, 1.2, 3.0, 8.0];      // initial stability by rating 1..4
+  var FLUENCY_MS = 2500;                      // sub-threshold correct = automatic retrieval (not counting)
+
+  function retrievability(t, S){            // predicted recall after t days
+    if(!(S > 0) || !(t >= 0)) return 1;
+    return Math.pow(1 + FACTOR * t / S, DECAY);
+  }
+  function nextInterval(S){                  // days until R hits TARGET_R
+    if(!(S > 0)) return 1;
+    var d = (S / FACTOR) * (Math.pow(TARGET_R, 1 / DECAY) - 1);
+    return Math.max(1, Math.round(d));
+  }
+  function ratingOf(q){ q = q|0; if(q < 3) return 1; if(q < 4) return 2; if(q < 5) return 3; return 4; } // again/hard/good/easy
+  function initDifficulty(g){ return clampDiff(7 - (g - 1)); }       // again→7 … easy→4
+  function clampDiff(d){ if(!isFinite(d)) return DIFF_ANCHOR; return d < 1 ? 1 : (d > 10 ? 10 : d); }
+  function clamp(x, a, b){ return x < a ? a : (x > b ? b : x); }
 
   // ---------- deck construction ----------
-  // Each card: {id, kind, q, ans, ease, intervalDays, dueTs, reps, lapses, lastTs}
+  // Card: {id, kind, q, ans, difficulty, stability, intervalDays, dueTs, reps, lapses, lastTs, leech}
   function buildDeck(){
     var now = Date.now();
     var cards = {};
     function add(id, kind, q, ans){
       cards[id] = {
         id:id, kind:kind, q:q, ans:ans,
-        ease:EF_START, intervalDays:0, dueTs:now,
+        difficulty:DIFF_ANCHOR, stability:0, intervalDays:0, dueTs:now,
         reps:0, lapses:0, lastTs:0
       };
     }
@@ -7754,22 +8902,15 @@ go("home");
 
   function count(){
     try{
-      var arr = cardsArr(), total = arr.length, d = 0, mat = 0, lc = 0;
+      var arr = cardsArr(), total = arr.length, d = 0, mat = 0, lc = 0, flu = 0;
       var now = Date.now();
       for(var i=0;i<arr.length;i++){
         if((arr[i].dueTs||0) <= now) d++;
-        if((arr[i].intervalDays||0) >= 21) mat++;
+        if((arr[i].intervalDays||0) >= 21){ mat++; if(isFluent(arr[i])) flu++; }
         if(isLeechCard(arr[i])) lc++;
       }
-      return { total: total, due: d, mature: mat, leeches: lc };
-    }catch(e){ return { total:0, due:0, mature:0, leeches:0 }; }
-  }
-
-  function clampEase(e){
-    if(!isFinite(e)) return EF_START;
-    if(e < EF_FLOOR) return EF_FLOOR;
-    if(e > EF_MAX) return EF_MAX;
-    return e;
+      return { total: total, due: d, mature: mat, leeches: lc, fluent: flu };
+    }catch(e){ return { total:0, due:0, mature:0, leeches:0, fluent:0 }; }
   }
 
   // ±10% jitter so daily load stays even (keeps the schedule honest, not gamed).
@@ -7779,36 +8920,176 @@ go("home");
     return Math.round(ms * factor);
   }
 
+  // Bring a legacy SM-2 card (or a fresh one) into the DSR world.
+  function ensureDSR(c){
+    if(!isFinite(c.difficulty)) c.difficulty = DIFF_ANCHOR;
+    if(!isFinite(c.stability)){
+      // migrate: a learned SM-2 card carries its interval as a stability seed.
+      c.stability = (c.intervalDays > 0) ? Math.max(0.5, c.intervalDays) : 0;
+    }
+  }
+
+  // FSRS-lite grade. quality 0..5 (kept as the grading input); mapped to a
+  // 4-point rating (again/hard/good/easy) internally.
   function grade(id, quality){
     try{
       var dk = deck();
       var c = dk[id];
       if(!c) return null;
-      var q = quality|0;
-      if(q < 0) q = 0; if(q > 5) q = 5;
+      ensureDSR(c);
+      var g = ratingOf(quality);
       var now = Date.now();
+      var firstReview = !(c.stability > 0);
+      var t = firstReview ? 0 : Math.max(0, (now - (c.lastTs || now)) / DAY);
+      var R = firstReview ? TARGET_R : retrievability(t, c.stability);
 
-      if(q < 3){
-        // lapse
-        c.reps = 0;
-        c.intervalDays = 0;
-        c.lapses = (c.lapses||0) + 1;
-        c.dueTs = now + RELEARN;
-        if((c.lapses||0) >= LEECH_LAPSES) c.leech = true;
+      // difficulty: set on first sight, else nudge by rating with mean-reversion
+      if(firstReview){
+        c.difficulty = initDifficulty(g);
       } else {
-        c.reps = (c.reps||0) + 1;
-        if(c.reps === 1) c.intervalDays = 1;
-        else if(c.reps === 2) c.intervalDays = 6;
-        else c.intervalDays = Math.max(1, Math.round((c.intervalDays||1) * (c.ease||EF_START)));
-        // ±10% fuzz on the pass interval so due dates spread out.
+        var dRaw = c.difficulty - DIFF_STEP * (g - 3);     // good→0, again→+, easy→−
+        c.difficulty = clampDiff(dRaw * (1 - DIFF_MR) + DIFF_ANCHOR * DIFF_MR);
+      }
+
+      if(g === 1){
+        // lapse → short relearn step; stability drops but is never crushed to ~0
+        c.lapses = (c.lapses || 0) + 1;
+        c.reps = 0;
+        var prevS = c.stability || 0;
+        var Sl = firstReview
+          ? INIT_S[1]
+          : W_LAPSE * Math.pow(c.difficulty, -W_LAPSE_D) * (Math.pow(prevS + 1, W_LAPSE_S) - 1) * Math.exp((1 - R) * W_LAPSE_R);
+        if(!isFinite(Sl) || Sl <= 0) Sl = INIT_S[1];
+        c.stability = clamp(Sl, 0.3, firstReview ? 2 : Math.min(prevS, 5));
+        c.intervalDays = 0;
+        c.dueTs = now + RELEARN;
+        if((c.lapses || 0) >= LEECH_LAPSES) c.leech = true;
+      } else {
+        c.reps = (c.reps || 0) + 1;
+        if(firstReview){
+          c.stability = INIT_S[g];
+        } else {
+          var hard = (g === 2) ? W_HARD : 1;
+          var easy = (g === 4) ? W_EASY : 1;
+          var inc = Math.exp(W8) * (11 - c.difficulty) * Math.pow(c.stability, -W9) * (Math.exp((1 - R) * W10) - 1) * hard * easy;
+          if(!isFinite(inc) || inc < 0) inc = 0;
+          c.stability = c.stability * (1 + inc);
+        }
+        c.intervalDays = nextInterval(c.stability);
         c.dueTs = now + fuzz(c.intervalDays * DAY);
       }
-      // SM-2 ease update (floor 1.3, cap 3.0)
-      c.ease = clampEase((c.ease||EF_START) + (0.1 - (5-q)*(0.08 + (5-q)*0.02)));
       c.lastTs = now;
       try{ M.save(); }catch(e){}
       return c;
     }catch(e){ return null; }
+  }
+
+  // ---------- FIRe-lite: implicit repetition over the fact graph ----------
+  // A correct composite answer (e.g. 34×6) pays down review-debt on the atomic
+  // facts it exercises (4×6, 3×6); a fact-slip pushes a small penalty back down.
+  function todayStr(){ try{ return M.util.todayKey(); }catch(e){ return "d"; } }
+  function implicitAllowed(c){
+    var d = todayStr();
+    if(c._impDay !== d){ c._impDay = d; c._impN = 0; }
+    return (c._impN || 0) < IMPLICIT_CAP;
+  }
+  // Advance a card by `fraction` of a successful review, without moving lastTs
+  // (the fact was only exercised inside a larger problem). Never pulls due earlier.
+  function creditImplicit(id, fraction){
+    try{
+      var dk = deck();
+      var c = dk[id];
+      if(!c) return;
+      ensureDSR(c);
+      if(!implicitAllowed(c)) return;
+      var f = clamp(fraction || 0.5, 0.05, 1);
+      var now = Date.now();
+      if(!(c.stability > 0)){
+        c.stability = INIT_S[3] * f;     // first contact via a composite → light seed
+      } else {
+        var t = Math.max(0, (now - (c.lastTs || now)) / DAY);
+        var R = retrievability(t, c.stability);
+        var inc = Math.exp(W8) * (11 - c.difficulty) * Math.pow(c.stability, -W9) * (Math.exp((1 - R) * W10) - 1);
+        if(!isFinite(inc) || inc < 0) inc = 0;
+        c.stability = c.stability * (1 + inc * f);
+      }
+      c._impN = (c._impN || 0) + 1;
+      c.intervalDays = nextInterval(c.stability);
+      var base = c.lastTs || now;
+      var newDue = base + fuzz(c.intervalDays * DAY);
+      if(newDue > (c.dueTs || 0)) c.dueTs = newDue; // only push outward
+      // no per-call save: piggybacks on the game's endGame save (avoids hammering
+      // localStorage during a fast sprint), same policy as updateRating().
+    }catch(e){}
+  }
+  // A missed sub-fact: nudge stability down and bring the card due soon.
+  function penalizeImplicit(id){
+    try{
+      var dk = deck();
+      var c = dk[id];
+      if(!c) return;
+      ensureDSR(c);
+      if(c.stability > 0) c.stability = Math.max(0.4, c.stability * 0.6);
+      c.difficulty = clampDiff(c.difficulty + 0.4);
+      var now = Date.now();
+      var soon = now + 12 * 3600000; // due within ~12h
+      if((c.dueTs || 0) > soon) c.dueTs = soon;
+      c.intervalDays = nextInterval(c.stability);
+    }catch(e){}
+  }
+  // Map a solved/missed problem to the atomic cards it exercises, then credit them.
+  function digitFacts(a, b){
+    var out = [], da = String(a).split(""), db = String(b).split(""), i, j;
+    for(i = 0; i < da.length; i++){
+      for(j = 0; j < db.length; j++){
+        var x = +da[i], y = +db[j];
+        if(x >= 2 && x <= 12 && y >= 2 && y <= 12){
+          var lo = Math.min(x, y), hi = Math.max(x, y);
+          out.push("mult:" + lo + "x" + hi);
+        }
+      }
+    }
+    return out;
+  }
+  // Record a correct-answer reaction time onto a card (EMA), WITHOUT touching the
+  // schedule — this is the fluency/automaticity signal, separate from retention.
+  function recordRt(id, rtMs){
+    try{
+      if(!(typeof rtMs === "number" && isFinite(rtMs)) || rtMs <= 0 || rtMs > 30000) return;
+      var c = deck()[id];
+      if(!c) return;
+      c.rtMs = c.rtMs ? Math.round(c.rtMs * 0.7 + rtMs * 0.3) : Math.round(rtMs);
+    }catch(e){}
+  }
+  function creditProblem(op, a, b, correct, rtMs){
+    try{
+      a = Math.abs(a|0); b = Math.abs(b|0);
+      var dk = deck();
+      if(op === "mul"){
+        var lo = Math.min(a, b), hi = Math.max(a, b);
+        if(lo >= 2 && hi <= 12 && dk["mult:" + lo + "x" + hi]){
+          // the exact table fact was directly retrieved
+          if(correct){ creditImplicit("mult:" + lo + "x" + hi, 1.0); recordRt("mult:" + lo + "x" + hi, rtMs); }
+          else penalizeImplicit("mult:" + lo + "x" + hi);
+        } else if(correct){
+          // composite product: credit the digit×digit subfacts it leans on
+          digitFacts(a, b).forEach(function(fid){ if(dk[fid]) creditImplicit(fid, 0.5); });
+        }
+        if(correct && a === b && a >= 2 && a <= 25 && dk["sq:" + a]){ creditImplicit("sq:" + a, 1.0); recordRt("sq:" + a, rtMs); }
+      } else if(op === "div"){
+        // a÷b=q ⇒ exercises the product b×q
+        var q = (b ? a / b : 0) | 0, lo2 = Math.min(b, q), hi2 = Math.max(b, q);
+        if(lo2 >= 2 && hi2 <= 12 && dk["mult:" + lo2 + "x" + hi2]){
+          if(correct){ creditImplicit("mult:" + lo2 + "x" + hi2, 0.8); recordRt("mult:" + lo2 + "x" + hi2, rtMs); }
+          else penalizeImplicit("mult:" + lo2 + "x" + hi2);
+        }
+      } else if(op === "add" && correct){
+        // a complement-to-10 pairing if present
+        var u = a % 10, v = b % 10;
+        if(u + v === 10 && u >= 1 && u <= 9 && dk["comp10:" + u]) creditImplicit("comp10:" + u, 0.4);
+        if(a === b && dk["doubles:" + a]) creditImplicit("doubles:" + a, 0.6);
+      }
+    }catch(e){}
   }
 
   function gradeFromAnswer(id, correct, rtMs){
@@ -7816,11 +9097,36 @@ go("home");
       var q;
       var rt = (typeof rtMs === "number" && isFinite(rtMs)) ? rtMs : 99999;
       if(!correct) q = 2;
-      else if(rt < 2500) q = 5;
+      else if(rt < FLUENCY_MS) q = 5;
       else if(rt < 5000) q = 4;
       else q = 3;
-      return grade(id, q);
+      var res = grade(id, q);
+      if(correct) recordRt(id, rtMs); // fluency signal feeds the automaticity readout
+      return res;
     }catch(e){ return null; }
+  }
+
+  // fluent/automatic = mastered (durable) AND fast-correct (sub-threshold median RT)
+  function isFluent(c){ return !!(c && (c.intervalDays||0) >= 21 && c.rtMs && c.rtMs <= FLUENCY_MS); }
+
+  // Enumerate cards (lightweight) — used by the cumulative exam to compose a mixed set.
+  function allCards(){
+    var out = [];
+    try{
+      var arr = cardsArr(), now = Date.now();
+      for(var i=0;i<arr.length;i++){
+        var c = arr[i];
+        out.push({
+          id:c.id, kind:c.kind, q:c.q, ans:c.ans,
+          intervalDays:c.intervalDays||0, stability:c.stability||0,
+          reps:c.reps||0, lapses:c.lapses||0, rtMs:c.rtMs||0,
+          touched:((c.reps||0)>0||(c.stability||0)>0),
+          mature:((c.intervalDays||0)>=21),
+          retention:(c.stability>0)?retrievability(Math.max(0,(now-(c.lastTs||now))/DAY),c.stability):null
+        });
+      }
+    }catch(e){}
+    return out;
   }
 
   window.MentisFacts = {
@@ -7829,7 +9135,15 @@ go("home");
     count: count,
     grade: grade,
     gradeFromAnswer: gradeFromAnswer,
-    isLeech: isLeech
+    allCards: allCards,
+    recordRt: recordRt,
+    fluencyMs: FLUENCY_MS,
+    isLeech: isLeech,
+    creditProblem: creditProblem,
+    creditImplicit: creditImplicit,
+    penalizeImplicit: penalizeImplicit,
+    retentionOf: function(id){ try{ var c = deck()[id]; if(!c || !(c.stability>0)) return null; return retrievability(Math.max(0,(Date.now()-(c.lastTs||Date.now()))/DAY), c.stability); }catch(e){ return null; } },
+    cardStat: function(id){ try{ var c = deck()[id]; if(!c) return null; return { stability:c.stability||0, difficulty:c.difficulty||DIFF_ANCHOR, intervalDays:c.intervalDays||0, dueTs:c.dueTs||0, lapses:c.lapses||0, reps:c.reps||0, leech:isLeechCard(c), rtMs:c.rtMs||0, fluent:isFluent(c) }; }catch(e){ return null; } }
   };
 
   // ---------- module UI ----------
@@ -7876,11 +9190,12 @@ go("home");
 
     body.innerHTML =
       '<div class="ex-wrap">'+
-        '<p class="lead">Таблица умножения, квадраты, дополнения до 10 и 100, удвоения и дроби в процентах — по одной карточке. Алгоритм <b>интервального повторения</b> (SM-2) сам решает, что и когда показать, чтобы держать всё в памяти при минимуме повторов.</p>'+
+        '<p class="lead">Таблица умножения, квадраты, дополнения до 10 и 100, удвоения и дроби в процентах — по одной карточке. Алгоритм <b>интервального повторения</b> (FSRS-модель памяти) сам решает, что и когда показать, чтобы держать всё в памяти при минимуме повторов.</p>'+
         '<div class="ex-pills">'+
           '<div class="ex-pill">всего <b class="tnum">'+c.total+'</b></div>'+
           '<div class="ex-pill">к повтору <b class="accent tnum">'+c.due+'</b></div>'+
           '<div class="ex-pill">усвоено <b class="tnum">'+c.mature+'</b></div>'+
+          '<div class="ex-pill">на автомате <b class="tnum">'+(c.fluent||0)+'</b></div>'+
         '</div>'+
         dueLine+
         '<div class="ex-sub">'+best+'</div>'+
