@@ -5044,10 +5044,41 @@ applyAnswerInput();
     };
   }
 
+  // ---- HOST transport: MULTI-HOME across every broker at once ----
+  // The joiner connects to whichever single broker it can reach first; if the host
+  // sat on only one broker they might miss each other (failover divergence) — and a
+  // dropped welcome (QoS-0) used to make the joiner wander OFF the right broker. So
+  // the host now listens/answers on ALL brokers and the joiner just stays put. One
+  // side being multi-home and the other single means every message is delivered at
+  // most once — no dedup needed.
+  function makeMultiNet(){
+    return {
+      conns:[], subs:[], onMsg:null, _readyCount:0,
+      connect:function(onMsg, onState){
+        var self=this; self.onMsg=onMsg;
+        BROKERS.forEach(function(url){
+          var opts={ clientId:"mentis_"+Math.random().toString(36).slice(2,10), reconnectPeriod:3000, connectTimeout:8000, clean:true, keepalive:30 };
+          var c; try{ c=window.mqtt.connect(url, opts); }catch(e){ return; }
+          var rec={ c:c, ready:false }; self.conns.push(rec);
+          c.on("connect", function(){
+            rec.ready=true; self.subs.forEach(function(t){ try{ c.subscribe(t); }catch(e){} });
+            self._readyCount++; if(self._readyCount===1) onState("connected");
+          });
+          c.on("message", function(topic,payload){ try{ self.onMsg(topic, JSON.parse(payload.toString())); }catch(e){} });
+          c.on("error", function(){});
+        });
+        setTimeout(function(){ if(self._readyCount===0) onState("failed"); }, 9500);
+      },
+      sub:function(t){ if(this.subs.indexOf(t)<0) this.subs.push(t); this.conns.forEach(function(r){ if(r.ready) try{ r.c.subscribe(t); }catch(e){} }); },
+      pub:function(t,obj){ var s=JSON.stringify(obj); this.conns.forEach(function(r){ if(r.ready) try{ r.c.publish(t, s); }catch(e){} }); },
+      end:function(){ this.conns.forEach(function(r){ try{ r.c.end(true); }catch(e){} }); this.conns=[]; this._readyCount=0; }
+    };
+  }
+
   // ---- module state ----
   var net=null, role=null, room=null, epoch=null, body=null;
   var G=null, timers=[], hb=null, voidT=null, lastPing=0, away=false;
-  var helloTimer=null, helloTries=0, hops=0;
+  var helloTimer=null, helloTries=0;
   function clearTimers(){ timers.forEach(function(t){ clearTimeout(t); }); timers=[]; if(voidT){ clearTimeout(voidT); voidT=null; } }
   function stopHb(){ if(hb){ clearInterval(hb); hb=null; } }
   function stopHello(){ if(helloTimer){ clearInterval(helloTimer); helloTimer=null; } }
@@ -5105,11 +5136,10 @@ applyAnswerInput();
     body.innerHTML='<div class="don-wrap"><div class="don-status"><span class="don-sdot wait"></span>Подключаюсь к серверу…</div></div>';
     loadMqtt(function(okLib){
       if(!okLib){ failConnect(); return; }
-      net=makeNet();
-      net.connect({topic:T("sys"), payload:{type:"bye",room:room,epoch:epoch,from:"h"}}, hostMsg, function(st){
+      net=makeMultiNet();
+      net.connect(hostMsg, function(st){
         if(st==="connected"){ net.sub(T("c2h")); net.sub(T("sys")); if(!G.started) hostLobbyView(); startHeartbeat(); }
         else if(st==="failed"){ failConnect(); }
-        else if(st==="reconnecting"||st==="dropped"){ /* presence handles UI */ }
       });
     });
   }
@@ -5187,24 +5217,26 @@ applyAnswerInput();
   function doJoin(code){
     code=(code||"").toUpperCase().replace(/[^2-9A-HJ-NP-Z]/g,"");
     if(code.length!==5){ var b=body.querySelector(".don-codein"); if(b){ b.style.borderColor="var(--bad)"; setTimeout(function(){ b.style.borderColor=""; },800); } return; }
-    role="client"; room=code; epoch=null; hops=0; resetGame();
+    role="client"; room=code; epoch=null; resetGame();
     body.innerHTML='<div class="don-wrap"><div class="don-status"><span class="don-sdot wait"></span>Подключаюсь…</div></div>';
     loadMqtt(function(okLib){
       if(!okLib){ failConnect(); return; }
-      clientConnect(0);
+      clientConnect();
     });
   }
-  // Connect on a chosen broker and keep announcing ourselves. Public brokers drop
-  // QoS-0 messages, so a single hello can be lost — we retry until we get a welcome,
-  // and if the host turns out to be on a different broker we hop to find it.
-  function clientConnect(startIdx){
+  // makeNet already fails over across every broker until one connects, and the host
+  // is multi-home (present on ALL brokers) — so whatever single broker we land on,
+  // the host is there. We just keep re-announcing ourselves (QoS-0 can drop a lone
+  // hello) and stay put until the welcome arrives. No broker-hopping: a missing
+  // welcome means packet loss on the right broker, not the wrong broker.
+  function clientConnect(){
     stopHello();
     if(net){ try{ net.end(); }catch(e){} }
     net=makeNet();
     net.connect({topic:T("sys"), payload:{type:"bye",room:room,from:"c"}}, clientMsg, function(st){
       if(st==="connected"){ if(epoch) return; net.sub(T("h2c")); net.sub(T("sys")); startHeartbeat(); startHello(); }
       else if(st==="failed"){ failConnect(); }
-    }, startIdx);
+    });
   }
   function startHello(){
     stopHello(); helloTries=0; clientWaitView();
@@ -5212,17 +5244,11 @@ applyAnswerInput();
       if(epoch){ stopHello(); return; }
       try{ net.pub(T("c2h"), {type:"hello",room:room,from:"c",clientId:myId(),name:"Соперник"}); }catch(e){}
       helloTries++;
-      if(helloTries===6) setWaitHint();
-      if(helloTries%5===0) hopBroker();
+      if(helloTries===7) setWaitHint();
+      if(helloTries>=30){ stopHello(); huntFailed(); return; } // ~45s of silence → wrong code / host not open
     };
     send();
     helloTimer=setInterval(send, 1500);
-  }
-  function hopBroker(){
-    if(epoch) return;
-    hops++;
-    if(hops>BROKERS.length*2){ stopHello(); huntFailed(); return; }
-    clientConnect((net.brokerIdx+1)%BROKERS.length);
   }
   function setWaitHint(){ var t=body.querySelector("#don-presence-txt"); if(t) t.textContent="Ищу создателя… проверь код и что игра у него открыта"; }
   function huntFailed(){
