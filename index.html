@@ -5011,13 +5011,16 @@ applyAnswerInput();
   // ---- transport adapter (the BYO-backend seam: only this touches mqtt.*) ----
   function makeNet(){
     return {
-      client:null, subs:[], onMsg:null, onState:null, _ready:false,
-      connect:function(will, onMsg, onState){
+      client:null, subs:[], onMsg:null, onState:null, _ready:false, brokerIdx:0,
+      connect:function(will, onMsg, onState, startIdx){
         var self=this; self.onMsg=onMsg; self.onState=onState;
+        var order=[]; startIdx=startIdx||0;
+        for(var k=0;k<BROKERS.length;k++) order.push((startIdx+k)%BROKERS.length);
         var i=0;
         (function tryIdx(){
-          if(i>=BROKERS.length){ onState("failed"); return; }
-          var idx=i++, cid="mentis_"+Math.random().toString(36).slice(2,10);
+          if(i>=order.length){ onState("failed"); return; }
+          var idx=order[i++]; self.brokerIdx=idx;
+          var cid="mentis_"+Math.random().toString(36).slice(2,10);
           var opts={ clientId:cid, reconnectPeriod:2000, connectTimeout:8000, clean:true, keepalive:30 };
           if(will) opts.will={ topic:will.topic, payload:JSON.stringify(will.payload), qos:0, retain:false };
           var c; try{ c=window.mqtt.connect(BROKERS[idx], opts); }catch(e){ tryIdx(); return; }
@@ -5044,9 +5047,11 @@ applyAnswerInput();
   // ---- module state ----
   var net=null, role=null, room=null, epoch=null, body=null;
   var G=null, timers=[], hb=null, voidT=null, lastPing=0, away=false;
+  var helloTimer=null, helloTries=0, hops=0;
   function clearTimers(){ timers.forEach(function(t){ clearTimeout(t); }); timers=[]; if(voidT){ clearTimeout(voidT); voidT=null; } }
   function stopHb(){ if(hb){ clearInterval(hb); hb=null; } }
-  function cleanup(){ clearTimers(); stopHb(); if(net){ try{ net.pub(T("sys"), {type:"bye", room:room, epoch:epoch, from:role==="host"?"h":"c"}); }catch(e){} net.end(); net=null; } }
+  function stopHello(){ if(helloTimer){ clearInterval(helloTimer); helloTimer=null; } }
+  function cleanup(){ clearTimers(); stopHb(); stopHello(); if(net){ try{ net.pub(T("sys"), {type:"bye", room:room, epoch:epoch, from:role==="host"?"h":"c"}); }catch(e){} net.end(); net=null; } }
   M.onLeave(cleanup);
   function T(suffix){ return "mentis/"+room+"/"+suffix; }
   function loadCfg(){ var S=M.getState(); if(!S.settings.duel) S.settings.duel={ops:{add:true,sub:true,mul:false,div:false},diff:"medium",target:7}; return S.settings.duel; }
@@ -5182,27 +5187,61 @@ applyAnswerInput();
   function doJoin(code){
     code=(code||"").toUpperCase().replace(/[^2-9A-HJ-NP-Z]/g,"");
     if(code.length!==5){ var b=body.querySelector(".don-codein"); if(b){ b.style.borderColor="var(--bad)"; setTimeout(function(){ b.style.borderColor=""; },800); } return; }
-    role="client"; room=code; epoch=null; resetGame();
+    role="client"; room=code; epoch=null; hops=0; resetGame();
     body.innerHTML='<div class="don-wrap"><div class="don-status"><span class="don-sdot wait"></span>Подключаюсь…</div></div>';
     loadMqtt(function(okLib){
       if(!okLib){ failConnect(); return; }
-      net=makeNet();
-      net.connect({topic:T("sys"), payload:{type:"bye",room:room,from:"c"}}, clientMsg, function(st){
-        if(st==="connected"){ net.sub(T("h2c")); net.sub(T("sys")); net.pub(T("c2h"), {type:"hello",room:room,from:"c",clientId:myId(),name:"Соперник"}); startHeartbeat(); clientWaitView(); }
-        else if(st==="failed"){ failConnect(); }
-      });
+      clientConnect(0);
     });
+  }
+  // Connect on a chosen broker and keep announcing ourselves. Public brokers drop
+  // QoS-0 messages, so a single hello can be lost — we retry until we get a welcome,
+  // and if the host turns out to be on a different broker we hop to find it.
+  function clientConnect(startIdx){
+    stopHello();
+    if(net){ try{ net.end(); }catch(e){} }
+    net=makeNet();
+    net.connect({topic:T("sys"), payload:{type:"bye",room:room,from:"c"}}, clientMsg, function(st){
+      if(st==="connected"){ if(epoch) return; net.sub(T("h2c")); net.sub(T("sys")); startHeartbeat(); startHello(); }
+      else if(st==="failed"){ failConnect(); }
+    }, startIdx);
+  }
+  function startHello(){
+    stopHello(); helloTries=0; clientWaitView();
+    var send=function(){
+      if(epoch){ stopHello(); return; }
+      try{ net.pub(T("c2h"), {type:"hello",room:room,from:"c",clientId:myId(),name:"Соперник"}); }catch(e){}
+      helloTries++;
+      if(helloTries===6) setWaitHint();
+      if(helloTries%5===0) hopBroker();
+    };
+    send();
+    helloTimer=setInterval(send, 1500);
+  }
+  function hopBroker(){
+    if(epoch) return;
+    hops++;
+    if(hops>BROKERS.length*2){ stopHello(); huntFailed(); return; }
+    clientConnect((net.brokerIdx+1)%BROKERS.length);
+  }
+  function setWaitHint(){ var t=body.querySelector("#don-presence-txt"); if(t) t.textContent="Ищу создателя… проверь код и что игра у него открыта"; }
+  function huntFailed(){
+    body.innerHTML='<div class="don-wrap"><div class="don-banner bad">Не удалось найти комнату. Проверь код и что создатель не закрыл игру, затем попробуй снова.</div>'+
+      '<button class="btn" id="don-retry2" type="button">Ещё раз</button><button class="btn ghost sm" id="don-back3" type="button">Назад</button></div>';
+    var r=body.querySelector("#don-retry2"); if(r) r.addEventListener("click", function(){ cleanup(); clientJoin(); });
+    var b=body.querySelector("#don-back3"); if(b) b.addEventListener("click", function(){ cleanup(); start(); });
   }
   var _myId=null; function myId(){ if(!_myId) _myId=Math.random().toString(36).slice(2,10); return _myId; }
   function clientWaitView(){
-    body.innerHTML='<div class="don-wrap"><div class="don-code" style="font-size:34px">'+room+'</div><div class="don-status"><span class="don-sdot wait"></span>На связи. Ждём, пока создатель начнёт…</div><button class="btn ghost sm" id="don-cancel" type="button">Выйти</button></div>';
+    var txt=epoch?"На связи. Ждём, пока создатель начнёт…":"Подключаюсь к создателю…";
+    body.innerHTML='<div class="don-wrap"><div class="don-code" style="font-size:34px">'+room+'</div><div class="don-status"><span class="don-sdot '+(epoch?"on":"wait")+'"></span><span id="don-presence-txt">'+txt+'</span></div><button class="btn ghost sm" id="don-cancel" type="button">Выйти</button></div>';
     var c=body.querySelector("#don-cancel"); if(c) c.addEventListener("click", function(){ cleanup(); start(); });
   }
   function clientMsg(topic, m){
     if(!m||m.room!==room) return;
     if(m.type==="welcome"){
       if(m.full){ body.innerHTML='<div class="don-wrap"><div class="don-banner bad">Комната уже занята двумя игроками.</div><button class="btn ghost" id="don-back" type="button">Назад</button></div>'; var bk=body.querySelector("#don-back"); if(bk) bk.addEventListener("click", function(){ cleanup(); start(); }); return; }
-      epoch=m.epoch; G.oppHere=true; presenceSeen(); if(!G.started) clientWaitView(); return;
+      epoch=m.epoch; G.oppHere=true; stopHello(); presenceSeen(); if(!G.started) clientWaitView(); return;
     }
     if(epoch && m.epoch!==epoch) return;
     if(m.type==="ping"&&m.from==="h"){ presenceSeen(); return; }
