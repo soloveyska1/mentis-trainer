@@ -276,7 +276,7 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 .fb .ic{font-size:18px}
 
 /* on-screen numpad */
-.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:min(330px,86vw);margin:6px auto 0}
+.numpad{display:none;grid-template-columns:repeat(3,1fr);gap:10px;width:min(330px,86vw);margin:6px auto 0}
 .numpad button{
   padding:15px 0;border-radius:12px;background:var(--s2);border:1px solid var(--line);
   font-family:var(--font-mono);font-size:21px;font-weight:500;color:var(--text);transition:all var(--dur-fast)
@@ -284,7 +284,6 @@ h2.section{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:up
 .numpad button:hover{background:var(--s3)}
 .numpad button:active{transform:scale(.96);background:var(--accent-soft)}
 .numpad button.act{color:var(--accent);font-size:18px}
-@media (hover:hover) and (pointer:fine){.numpad{display:none}}
 .numpad.force{display:grid}
 
 /* estimate-first hint — the elite ballpark/sanity-check habit */
@@ -750,7 +749,7 @@ body.noanim *{animation:none !important;transition:none !important}
         <button class="toggle" id="t-calm"></button>
       </div>
       <div class="set-row">
-        <div class="info"><div class="t">Экранная клавиатура</div><div class="d">Показывать цифровую панель и на компьютере</div></div>
+        <div class="info"><div class="t">Своя цифровая панель</div><div class="d">Вводить ответ встроенной панелью вместо клавиатуры устройства. Выключено — на телефоне печатаешь родной клавиатурой, на компьютере обычными клавишами</div></div>
         <button class="toggle" id="t-pad"></button>
       </div>
       <div class="set-row">
@@ -1084,6 +1083,7 @@ function startGame(){
   $("#g-correct").textContent="0";
   $("#g-acc").textContent="—";
   $("#numpad").classList.toggle("force",S.settings.forcePad);
+  applyAnswerInput();
   go("game");
   nextProblem();
   startTimer();
@@ -1696,7 +1696,7 @@ function hexRgb(hex){const n=parseInt(hex.slice(1),16);return `${(n>>16)&255},${
 function hexMix(hex,t){const n=parseInt(hex.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255,m=v=>Math.round(v+(255-v)*t);return `#${(1<<24|m(r)<<16|m(g)<<8|m(b)).toString(16).slice(1)}`;}
 function applyAnim(){document.body.classList.toggle("noanim",S.settings.noanim);}
 function syncSettings(){
-  const T={"t-sound":["sound","Звук"],"t-haptics":["haptics","Вибрация"],"t-auto":["autoAdvance","Авто-переход"],"t-anim":["noanim","Без анимаций"],"t-pad":["forcePad","Экранная клавиатура"],"t-calm":["calmMode","Спокойный счёт"],"t-selfexplain":["selfExplain","Саморефлексия при ошибке"],"t-estimate":["estimateFirst","Прикидка перед ответом"]};
+  const T={"t-sound":["sound","Звук"],"t-haptics":["haptics","Вибрация"],"t-auto":["autoAdvance","Авто-переход"],"t-anim":["noanim","Без анимаций"],"t-pad":["forcePad","Своя цифровая панель"],"t-calm":["calmMode","Спокойный счёт"],"t-selfexplain":["selfExplain","Саморефлексия при ошибке"],"t-estimate":["estimateFirst","Прикидка перед ответом"]};
   Object.keys(T).forEach(id=>{const el=$("#"+id);if(!el)return;const on=!!S.settings[T[id][0]];el.classList.toggle("on",on);el.setAttribute("role","switch");el.setAttribute("aria-checked",on?"true":"false");el.setAttribute("aria-label",T[id][1]);});
   const seg=$("#teach-seg");if(seg){seg.setAttribute("role","radiogroup");seg.setAttribute("aria-label","При ошибке");}
   $$("#teach-seg button").forEach(b=>{const on=b.dataset.tm===(S.settings.teachMode||"interactive");b.classList.toggle("on",on);b.setAttribute("role","radio");b.setAttribute("aria-checked",on?"true":"false");});
@@ -1716,7 +1716,7 @@ $("#t-sound").addEventListener("click",()=>{S.settings.sound=!S.settings.sound;s
 $("#t-haptics").addEventListener("click",()=>{S.settings.haptics=!S.settings.haptics;save();syncSettings();vibe(35);});
 $("#t-auto").addEventListener("click",()=>{S.settings.autoAdvance=!S.settings.autoAdvance;save();syncSettings();});
 $("#t-anim").addEventListener("click",()=>{S.settings.noanim=!S.settings.noanim;save();syncSettings();applyAnim();});
-$("#t-pad").addEventListener("click",()=>{S.settings.forcePad=!S.settings.forcePad;save();syncSettings();});
+$("#t-pad").addEventListener("click",()=>{S.settings.forcePad=!S.settings.forcePad;save();syncSettings();applyAnswerInput();});
 $("#teach-seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.settings.teachMode=b.dataset.tm;save();syncSettings();});
 $("#conf-seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.settings.confidence=b.dataset.cf;save();syncSettings();});
 $("#t-calm").addEventListener("click",()=>{S.settings.calmMode=!S.settings.calmMode;save();syncSettings();});
@@ -1887,15 +1887,18 @@ $("#theme-btn").addEventListener("click",()=>{S.settings.theme=S.settings.theme=
 function bootUI(){applyAccent();applyTheme();applyAnim();syncHome();syncSettings();renderBest();renderHomeModules();renderGoal();}
 bootUI();
 go("home");
-/* touch devices: drive the main-game answer via the on-screen numpad and suppress
-   the native keyboard, so iOS doesn't pop a second keypad over the in-app one. */
-try{
-  if(window.matchMedia && matchMedia("(pointer:coarse)").matches){
-    var _ans=document.getElementById("answer");
-    if(_ans){ _ans.setAttribute("inputmode","none"); _ans.setAttribute("readonly","readonly"); }
-    document.documentElement.classList.add("is-touch");
-  }
-}catch(e){}
+/* Answer input: by default use the DEVICE's own keyboard — the native iOS numeric
+   keypad on iPhone, the physical keyboard on desktop. Only when the user turns on
+   the built-in on-screen panel (forcePad) do we suppress the native keyboard so the
+   two don't overlap. */
+function applyAnswerInput(){
+  var a=document.getElementById("answer"); if(!a) return;
+  // inputmode "none" hides the native keyboard when the built-in panel is on;
+  // "numeric" lets the device's own keypad (native iOS number pad) drive input.
+  // (readonly is left to the game loop — nextProblem manages it per problem.)
+  a.setAttribute("inputmode", S.settings.forcePad ? "none" : "numeric");
+}
+applyAnswerInput();
 </script>
 
 <!-- ============================================================
